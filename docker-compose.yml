@@ -1,0 +1,9 @@
+services:
+  web:
+    build: .
+    container_name: conceptbridge-demo
+    # Bound to loopback so only cloudflared on the same host can reach it.
+    # Use "8392:8392" instead if cloudflared runs on another machine/network.
+    ports:
+      - "127.0.0.1:8392:8392"
+    restart: unless-stopped
