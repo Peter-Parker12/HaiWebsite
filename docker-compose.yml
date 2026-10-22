@@ -1,16 +1,7 @@
 services:
-  web:
+  conceptbridge-demo:
     build: .
-    container_name: conceptbridge-demo
-    # No published host port: reachable only from containers on the shared network below.
-    expose:
-      - "8392"
-    networks:
-      - tunnel
+    image: conceptbridge-demo:latest
+    ports:
+      - "8392:8392"
     restart: unless-stopped
-
-networks:
-  tunnel:
-    # Must be the same Docker network your cloudflared container is attached to.
-    external: true
-    name: ${TUNNEL_NETWORK:-cloudflared}
