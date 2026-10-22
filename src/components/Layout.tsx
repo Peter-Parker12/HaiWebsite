@@ -26,7 +26,7 @@ export default function Layout() {
     <div className="flex min-h-screen flex-col md:flex-row">
       <aside className="border-b border-cloth-200 bg-white md:w-64 md:shrink-0 md:border-b-0 md:border-r">
         <div className="flex items-center justify-between px-5 py-4 md:block">
-          <Link to="/" className="flex items-center gap-2 font-display text-xl font-semibold">
+          <Link to="/" className="flex items-center gap-2 text-xl font-extrabold">
             <Compass className="text-terra-500" size={22} /> ConceptBridge
           </Link>
         </div>
