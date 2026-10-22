@@ -11,11 +11,11 @@ const STEPS = [
 
 export default function Landing() {
   return (
-    <div className="min-h-screen bg-white">
-      <header className="sticky top-0 z-10 border-b border-cloth-200 bg-white">
+    <div className="min-h-screen bg-cloth-50">
+      <header className="sticky top-0 z-10 border-b border-cloth-200 bg-cloth-50">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
           <div className="flex items-center gap-2 text-xl font-extrabold tracking-tight">
-            <Compass className="text-indigo2-500" size={24} /> ConceptBridge
+            <Compass className="text-terra-500" size={24} /> ConceptBridge
           </div>
           <nav className="flex items-center gap-4 text-sm font-semibold">
             <Link to="/discover" className="hidden hover:underline sm:inline">Discover</Link>
@@ -88,7 +88,7 @@ export default function Landing() {
               ['Institutional plans', 'Museums, galleries, festivals and foundations publish programmes and find projects.'],
             ].map(([t, d]) => (
               <div key={t} className="rounded-lg border border-white/20 p-6">
-                <div className="text-xl font-bold text-indigo2-500">{t}</div>
+                <div className="text-xl font-bold text-terra-400">{t}</div>
                 <p className="mt-2 text-sm text-white/70">{d}</p>
               </div>
             ))}

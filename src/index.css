@@ -18,7 +18,7 @@ h1, h2, h3 {
     @apply btn bg-indigo2-600 text-white hover:bg-indigo2-700;
   }
   .btn-accent {
-    @apply btn bg-ink text-white hover:bg-ink/80;
+    @apply btn bg-terra-500 text-white hover:bg-terra-600;
   }
   .btn-ghost {
     @apply btn border border-cloth-300 bg-white text-ink hover:bg-cloth-100;
