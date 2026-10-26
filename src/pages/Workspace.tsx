@@ -8,9 +8,8 @@ const TABS = [
   ['idea-lab', 'Idea Lab'],
   ['resources', 'Resources'],
   ['discover', 'Matching'],
-  ['funding', 'Funding & ideas'],
+  ['funding', 'Funding'],
   ['activation', 'Activation'],
-  ['archive', 'Idea Trunk'],
 ] as const
 
 function Inner() {

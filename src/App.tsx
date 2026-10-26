@@ -9,14 +9,12 @@ import Login from './pages/Login'
 import Marketplace from './pages/Marketplace'
 import MyProjects from './pages/MyProjects'
 import Overview from './pages/Overview'
-import Pricing from './pages/Pricing'
 import Profile from './pages/Profile'
 import ProjectDetail from './pages/ProjectDetail'
 import Register from './pages/Register'
 import Resources from './pages/Resources'
 import { SponsorAccount, SponsorInvestments, SponsorWatchlist } from './pages/SponsorPages'
 import { SponsorLogin, SponsorRegister } from './pages/SponsorAuth'
-import Trunk from './pages/Trunk'
 import Workspace from './pages/Workspace'
 
 export default function App() {
@@ -30,7 +28,6 @@ export default function App() {
       <Route element={<Shell />}>
         <Route path="/" element={<Home />} />
         <Route path="/projects/:id" element={<ProjectDetail />} />
-        <Route path="/pricing" element={<Pricing />} />
 
         <Route element={<RequireUser />}>
           <Route path="/my-projects" element={<MyProjects />} />
@@ -44,7 +41,6 @@ export default function App() {
             <Route path="discover" element={<Discover />} />
             <Route path="funding" element={<Marketplace />} />
             <Route path="activation" element={<Activation />} />
-            <Route path="archive" element={<Trunk />} />
           </Route>
         </Route>
 

@@ -12,7 +12,6 @@ const FAQ = [
   ['What is ConceptBridge?', 'A platform where artists, curators and cultural practitioners develop ideas together, find the resources they are missing, and turn concepts into projects. Sponsors browse projects that need help.'],
   ['Does AI come up with the ideas?', 'No. People make every creative decision. The platform provides the shared workspace, planning tools and a network of resources.'],
   ['How can a sponsor help a project?', 'Express interest, offer in-kind support such as a venue, materials or mentoring, or keep a project on a watchlist. The creator decides whether to accept.'],
-  ['Who owns an idea I share?', 'You do. An idea on its own is generally not protected by copyright, but its documented form can be. Licensing covers documents and agreed uses only.'],
   ['Is this real money?', 'No. This is a demo prototype. Funding, pledges and commissions are simulated.'],
 ]
 

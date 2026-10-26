@@ -13,7 +13,7 @@ export default function Overview() {
   const rec = root.projects.find((p) => p.id === projectId)
   if (!rec) return null
 
-  const { project, resources, plan, trunk } = state
+  const { project, resources, plan } = state
   const b = budgetOf(state)
   const secured = resources.filter((r) => r.status === 'Secured').length
   const missing = resources.filter((r) => r.status === 'Missing').length
@@ -47,7 +47,6 @@ export default function Overview() {
     { label: 'Develop', done: project.directionAgreed, to: pp('idea-lab'), text: project.directionAgreed ? 'Direction agreed' : 'Agree project direction' },
     { label: 'Discover', done: missing === 0, to: pp('resources'), text: `${missing} resource gap${missing === 1 ? '' : 's'} open` },
     { label: 'Activate', done: plan.generated, to: pp('activation'), text: plan.generated ? `${done}/${plan.tasks.length} tasks done` : 'Generate project plan' },
-    { label: 'Preserve', done: trunk.length > 0, to: pp('archive'), text: `${trunk.length} concept${trunk.length === 1 ? '' : 's'} in Trunk` },
   ]
 
   return (
@@ -143,7 +142,7 @@ export default function Overview() {
         )}
       </div>
 
-      <div className="grid gap-3 md:grid-cols-4">
+      <div className="grid gap-3 md:grid-cols-3">
         {steps.map((s) => (
           <Link key={s.label} to={s.to} className="card hover:border-terra-400">
             <div className="flex items-center justify-between">

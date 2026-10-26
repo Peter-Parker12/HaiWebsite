@@ -28,7 +28,6 @@ function Navbar() {
           ]
         : [
             { to: '/', text: 'Home', end: true },
-            { to: '/pricing', text: 'Business model' },
           ]
 
   const unread = root.notices.filter((n) => !n.read).length
@@ -120,8 +119,7 @@ export function Shell() {
         <Outlet />
       </div>
       <footer className="border-t border-cloth-200 py-8 text-center text-xs text-ink/50">
-        ConceptBridge · demo prototype · no real payments ·{' '}
-        <Link to="/pricing" className="underline">Business model</Link>
+        ConceptBridge · demo prototype · no real payments
       </footer>
     </div>
   )
