@@ -2,8 +2,19 @@ import { BadgeCheck, Bookmark, Lock, Send, X } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { Chip, Modal, PageHeader } from '../components/ui'
-import { money, notify, today, uid, useStore } from '../store/store'
-import type { Entry, OutStatus, Resource, State } from '../store/types'
+import { money, notify, today, uid, useStore, useProjectPath } from '../store/store'
+import type { Entry, EntryKind, OutStatus, Resource, State } from '../store/types'
+
+const MONEY_KINDS: EntryKind[] = ['Funding', 'Donor', 'Sponsor']
+const KIND_TABS: { k: 'All' | EntryKind; label: string }[] = [
+  { k: 'All', label: 'All' },
+  { k: 'Person', label: 'People' },
+  { k: 'Organisation', label: 'Organisations' },
+  { k: 'Funding', label: 'Funding & open calls' },
+  { k: 'Donor', label: 'Donors & philanthropists' },
+  { k: 'Sponsor', label: 'Sponsors' },
+  { k: 'Mentor', label: 'Mentors' },
+]
 
 const TIER_LABEL = { public: 'Public directory', verified: 'Verified partner', private: 'Private network' } as const
 
@@ -21,13 +32,14 @@ function setOutreach(s: State, entryId: string, status: OutStatus, resourceId?: 
 }
 
 export default function Discover() {
+  const pp = useProjectPath()
   const { state, update } = useStore()
   const [params, setParams] = useSearchParams()
   const resourceId = params.get('resource') ?? ''
   const focus = state.resources.find((r) => r.id === resourceId)
 
   const [q, setQ] = useState('')
-  const [kind, setKind] = useState<'All' | Entry['kind']>('All')
+  const [kind, setKind] = useState<'All' | EntryKind>('All')
   const [discipline, setDiscipline] = useState('')
   const [location, setLocation] = useState('')
   const [stage, setStage] = useState('')
@@ -48,7 +60,7 @@ export default function Discover() {
         if (discipline && e.discipline !== discipline) return false
         if (location && e.location !== location) return false
         if (stage && e.stage !== stage) return false
-        if (maxBudget && e.kind !== 'Funding' && e.amount > Number(maxBudget)) return false
+        if (maxBudget && !MONEY_KINDS.includes(e.kind) && e.amount > Number(maxBudget)) return false
         if (q && !`${e.name} ${e.expertise} ${e.about}`.toLowerCase().includes(q.toLowerCase())) return false
         return true
       }),
@@ -123,10 +135,10 @@ export default function Discover() {
             <option value="6000">Up to $6,000</option>
           </select>
         </div>
-        <div className="mt-3 flex gap-2">
-          {(['All', 'Person', 'Organisation', 'Funding'] as const).map((k) => (
+        <div className="mt-3 flex flex-wrap gap-2">
+          {KIND_TABS.map(({ k, label }) => (
             <button key={k} onClick={() => setKind(k)} className={kind === k ? 'btn-primary !py-1' : 'btn-ghost !py-1'}>
-              {k === 'Funding' ? 'Funding & open calls' : k === 'All' ? 'All' : `${k}s`}
+              {label}
             </button>
           ))}
         </div>
@@ -160,7 +172,7 @@ export default function Discover() {
                 <p className="mt-2 text-sm text-ink/70">{e.expertise}</p>
                 <div className="mt-3 flex items-center justify-between">
                   <span className="text-sm font-medium">
-                    {e.amount > 0 ? (e.kind === 'Funding' ? `Up to ${money(e.amount)}` : `~${money(e.amount)}`) : 'Introductions'}
+                    {e.amount > 0 ? (MONEY_KINDS.includes(e.kind) ? `Up to ${money(e.amount)}` : `~${money(e.amount)}`) : 'Introductions'}
                   </span>
                   <div className="flex gap-2">
                     <button className="btn-ghost !py-1" disabled={!!st} onClick={() => update((s) => setOutreach(s, e.id, 'Saved', resourceId || undefined))}>
@@ -203,7 +215,7 @@ export default function Discover() {
               })}
             </ul>
           )}
-          <Link to="/resources" className="mt-3 inline-block text-xs text-indigo2-600 underline">View resource gaps</Link>
+          <Link to={pp('resources')} className="mt-3 inline-block text-xs text-indigo2-600 underline">View resource gaps</Link>
         </div>
       </div>
 
@@ -218,6 +230,9 @@ export default function Discover() {
               <p>{open.about}</p>
               <p><strong>Expertise:</strong> {open.expertise}</p>
               <p><strong>Location:</strong> {open.location}</p>
+              {open.regions && <p><strong>Operating regions:</strong> {open.regions.join(', ')}</p>}
+              {open.interests && <p><strong>Areas of interest:</strong> {open.interests.join(', ')}</p>}
+              {open.collabTypes && <p><strong>Open to:</strong> {open.collabTypes.join(', ')}</p>}
               {open.contact && <p><strong>Contact:</strong> {open.contact}</p>}
             </div>
           ) : (

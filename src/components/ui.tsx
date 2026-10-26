@@ -15,6 +15,11 @@ const TONES: Record<string, string> = {
   Unavailable: 'bg-gray-200 text-gray-600',
   Declined: 'bg-gray-200 text-gray-600',
   'To do': 'bg-gray-100 text-gray-700',
+  // project lifecycle
+  'Seeking support': 'bg-orange-100 text-orange-800',
+  Running: 'bg-blue-100 text-blue-800',
+  Closed: 'bg-gray-200 text-gray-600',
+  Supporting: 'bg-moss-100 text-moss-700',
   // tiers & visibility
   public: 'bg-sky-100 text-sky-800',
   verified: 'bg-emerald-100 text-emerald-800',
@@ -97,4 +102,8 @@ export function ProgressBar({ value, max, tone = 'bg-moss-500' }: { value: numbe
       <div className={`h-full ${tone}`} style={{ width: `${pct}%` }} />
     </div>
   )
+}
+
+export function Page({ children, wide }: { children: ReactNode; wide?: boolean }) {
+  return <div className={`mx-auto px-5 py-8 ${wide ? 'max-w-7xl' : 'max-w-6xl'}`}>{children}</div>
 }

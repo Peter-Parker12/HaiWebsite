@@ -1,7 +1,7 @@
 import { Download, Link2, Wand2 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Chip, PageHeader, ProgressBar } from '../components/ui'
-import { budgetOf, money, notify, uid, useStore } from '../store/store'
+import { budgetOf, money, notify, uid, useStore, useProjectPath } from '../store/store'
 import type { State, Task, TaskStatus } from '../store/types'
 
 const START = new Date('2026-11-02')
@@ -62,6 +62,7 @@ function generate(s: State): State {
 }
 
 export default function Activation() {
+  const pp = useProjectPath()
   const { state, update } = useStore()
   const { plan, project } = state
   const b = budgetOf(state)
@@ -112,9 +113,9 @@ export default function Activation() {
 
       <div className="card mb-4 flex flex-wrap items-center gap-x-6 gap-y-1 text-sm">
         <Link2 size={16} className="text-indigo2-600" />
-        <span>Concept from <Link to="/idea-lab" className="underline">Idea Lab</Link> ({project.directionAgreed ? 'direction agreed' : 'not yet agreed'})</span>
-        <span>{state.resources.filter((r) => r.status !== 'Secured').length} open resources from <Link to="/resources" className="underline">Resource Mapping</Link></span>
-        <span>{state.outreach.length} outreach items from <Link to="/discover" className="underline">Discover</Link></span>
+        <span>Concept from <Link to={pp('idea-lab')} className="underline">Idea Lab</Link> ({project.directionAgreed ? 'direction agreed' : 'not yet agreed'})</span>
+        <span>{state.resources.filter((r) => r.status !== 'Secured').length} open resources from <Link to={pp('resources')} className="underline">Resource Mapping</Link></span>
+        <span>{state.outreach.length} outreach items from <Link to={pp('discover')} className="underline">Discover</Link></span>
       </div>
 
       {!plan.generated ? (

@@ -1,12 +1,13 @@
 import { Search } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Chip, PageHeader } from '../components/ui'
-import { budgetOf, money, useStore } from '../store/store'
+import { budgetOf, money, useStore, useProjectPath } from '../store/store'
 import type { ResStatus } from '../store/types'
 
 const STATUSES: ResStatus[] = ['Missing', 'Contacted', 'Secured', 'Partially funded', 'Unavailable']
 
 export default function Resources() {
+  const pp = useProjectPath()
   const { state, update } = useStore()
   const { resources, outreach, directory } = state
   const b = budgetOf(state)
@@ -85,7 +86,7 @@ export default function Resources() {
                   </td>
                   <td className="px-4 py-3 text-right">
                     {r.status !== 'Secured' && (
-                      <Link to={`/discover?resource=${r.id}`} className="btn-ghost">
+                      <Link to={`${pp('discover')}?resource=${r.id}`} className="btn-ghost">
                         <Search size={14} /> Find match
                       </Link>
                     )}

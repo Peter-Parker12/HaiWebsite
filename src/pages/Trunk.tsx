@@ -1,6 +1,7 @@
-import { Eye, Globe, Lock, Plus, Users } from 'lucide-react'
+import { Check, Eye, Globe, Lock, Plus, Users } from 'lucide-react'
+import { useState } from 'react'
 import { Chip, PageHeader } from '../components/ui'
-import { notify, today, uid, useStore } from '../store/store'
+import { LICENCE_COMMISSION, money, notify, today, uid, useStore } from '../store/store'
 import type { TrunkItem, TrunkMode, Visibility } from '../store/types'
 
 const VIS: { value: Visibility; label: string; icon: typeof Lock; hint: string }[] = [
@@ -8,6 +9,135 @@ const VIS: { value: Visibility; label: string; icon: typeof Lock; hint: string }
   { value: 'collaborators', label: 'Collaborators', icon: Users, hint: 'People on the project' },
   { value: 'public', label: 'Public', icon: Globe, hint: 'Discoverable by anyone' },
 ]
+
+const DOCS = ['Concept', 'Proposal', 'Storyboard', 'Design documents']
+
+function LicenceGrant({ item }: { item: TrunkItem }) {
+  const { state, update } = useStore()
+  const [licensee, setLicensee] = useState('')
+  const [docs, setDocs] = useState<string[]>(['Concept'])
+  const [fee, setFee] = useState('1000')
+  const accepted = state.proposals.filter((p) => p.trunkId === item.id && p.status === 'Accepted')
+  const deals = state.licences.filter((l) => l.trunkId === item.id)
+
+  return (
+    <div className="mt-3 space-y-2">
+      <input className="input" list={`lic-${item.id}`} placeholder="Licensee (accepted proposers suggested)" value={licensee} onChange={(e) => setLicensee(e.target.value)} />
+      <datalist id={`lic-${item.id}`}>
+        {accepted.map((p) => <option key={p.id} value={p.from} />)}
+      </datalist>
+      <div className="flex flex-wrap gap-3 text-sm">
+        {DOCS.map((d) => (
+          <label key={d} className="flex items-center gap-1">
+            <input type="checkbox" checked={docs.includes(d)} onChange={(e) => setDocs(e.target.checked ? [...docs, d] : docs.filter((x) => x !== d))} />
+            {d}
+          </label>
+        ))}
+      </div>
+      <input className="input" type="number" placeholder="Licence fee ($)" value={fee} onChange={(e) => setFee(e.target.value)} />
+      <button
+        className="btn-primary w-full"
+        disabled={!licensee.trim() || docs.length === 0}
+        onClick={() =>
+          update((s) => {
+            const amount = Number(fee) || 0
+            const next = {
+              ...s,
+              licences: [...s.licences, { id: uid(), trunkId: item.id, licensee, docs, fee: amount, commissionPct: LICENCE_COMMISSION, date: today() }],
+              trunk: s.trunk.map((t) =>
+                t.id === item.id
+                  ? { ...t, history: [...t.history, { date: today(), text: `Licence finalised with ${licensee} for ${docs.join(', ')} — fee ${money(amount)}, platform commission ${money((amount * LICENCE_COMMISSION) / 100)}` }] }
+                  : t,
+              ),
+            }
+            return notify(next, `Licence finalised with ${licensee}`)
+          })
+        }
+      >
+        Finalise licence agreement
+      </button>
+      {deals.map((d) => (
+        <div key={d.id} className="rounded-lg bg-moss-100 p-3 text-xs">
+          <strong>{d.licensee}</strong> licensed: {d.docs.join(', ')}. Fee {money(d.fee)} · platform commission ({d.commissionPct}%){' '}
+          {money((d.fee * d.commissionPct) / 100)} · you receive {money(d.fee - (d.fee * d.commissionPct) / 100)}.
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function Stepper({ item }: { item: TrunkItem }) {
+  const { state } = useStore()
+  const props = state.proposals.filter((p) => p.trunkId === item.id)
+  const pending = props.filter((p) => p.status === 'Pending').length
+  const deals = state.licences.filter((l) => l.trunkId === item.id).length
+  const steps = [
+    { label: 'Made public', done: item.visibility === 'public' && item.mode !== 'none' },
+    { label: pending ? `${pending} proposal${pending > 1 ? 's' : ''} to review` : 'Proposals reviewed', done: props.length > 0 && pending === 0 },
+    { label: 'Licence granted', done: deals > 0 },
+    { label: 'Commission collected', done: deals > 0 },
+  ]
+  return (
+    <ol className="mt-4 grid gap-2 sm:grid-cols-4">
+      {steps.map((st, i) => (
+        <li key={i} className={`flex items-center gap-2 rounded-lg border p-2 text-xs ${st.done ? 'border-moss-500 bg-moss-100' : 'border-cloth-200'}`}>
+          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white text-[10px] font-bold">
+            {st.done ? <Check size={12} /> : i + 1}
+          </span>
+          {st.label}
+        </li>
+      ))}
+    </ol>
+  )
+}
+
+function Proposals({ item }: { item: TrunkItem }) {
+  const { state, update } = useStore()
+  const props = state.proposals.filter((p) => p.trunkId === item.id)
+  if (props.length === 0) return null
+  const decide = (id: string, status: 'Accepted' | 'Declined') =>
+    update((s) => {
+      const p = s.proposals.find((x) => x.id === id)
+      if (!p) return s
+      const next = {
+        ...s,
+        proposals: s.proposals.map((x) => (x.id === id ? { ...x, status } : x)),
+        trunk: s.trunk.map((t) =>
+          t.id === item.id
+            ? {
+                ...t,
+                contributors: status === 'Accepted' && p.kind === 'collaboration' ? [...t.contributors, p.from] : t.contributors,
+                history: [...t.history, { date: today(), text: `Proposal from ${p.from} ${status.toLowerCase()}` }],
+              }
+            : t,
+        ),
+      }
+      return notify(next, `Proposal from ${p.from} ${status.toLowerCase()}`)
+    })
+  return (
+    <>
+      <div className="label mt-4">Proposals received</div>
+      <ul className="space-y-2">
+        {props.map((p) => (
+          <li key={p.id} className="rounded-lg border border-cloth-200 p-3 text-sm">
+            <div className="flex items-center justify-between">
+              <span className="font-medium">{p.from}</span>
+              <Chip tone={p.status === 'Pending' ? 'Requested' : p.status}>{p.status}</Chip>
+            </div>
+            <div className="text-xs text-ink/50">{p.kind === 'licence' ? 'Wants to license' : 'Wants to co-develop'}</div>
+            <p className="mt-1 text-ink/70">{p.message}</p>
+            {p.status === 'Pending' && (
+              <div className="mt-2 flex gap-3">
+                <button className="text-xs text-moss-700 hover:underline" onClick={() => decide(p.id, 'Accepted')}>Accept</button>
+                <button className="text-xs text-ink/50 hover:underline" onClick={() => decide(p.id, 'Declined')}>Decline</button>
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
+    </>
+  )
+}
 
 export default function Trunk() {
   const { state, update } = useStore()
@@ -35,7 +165,7 @@ export default function Trunk() {
         visibility: 'private',
         mode: 'none',
         licence: { use: '', territory: '', term: '', attribution: '' },
-        creator: 'Mai Tran',
+        creator: s.user?.name ?? 'Me',
         contributors: s.project.collaborators.map((c) => c.name),
         history: [{ date: today(), text: 'Saved to Idea Trunk from Idea Lab (private)' }],
       }
@@ -74,6 +204,8 @@ export default function Trunk() {
                 {t.mode !== 'none' && <Chip tone="Secured">{t.mode === 'collaboration' ? 'Open for collaboration' : 'Available for licensing'}</Chip>}
               </div>
             </div>
+
+            <Stepper item={t} />
 
             <div className="mt-4 grid gap-6 md:grid-cols-2">
               <div>
@@ -129,13 +261,15 @@ export default function Trunk() {
                           onChange={(e) => patch(t.id, (x) => ({ ...x, licence: { ...x.licence, [k]: e.target.value } }))}
                         />
                       ))}
-                      <button className="btn-primary w-full" onClick={() => patch(t.id, (x) => x, 'Licence terms recorded')}>
+                      <button className="btn-ghost w-full" onClick={() => patch(t.id, (x) => x, 'Licence terms recorded')}>
                         Record agreement terms
                       </button>
                     </div>
+                    <div className="label mt-4">Grant licence</div>
+                    <LicenceGrant item={t} />
                     <p className="mt-3 rounded-lg bg-amber-50 p-3 text-xs text-amber-900">
-                      An abstract idea on its own is generally not protected by copyright. Protection can apply to the specific
-                      expression — text, images and design documents. Licences here cover those documents and agreed uses; the
+                      According to the World Intellectual Property Organization (WIPO), an idea itself is generally not protected by
+                      copyright; its specific form of expression — text, images, storyboards and design documents — can be. Licences here cover those documents and agreed uses; the
                       platform does not own or sell exclusive rights to ideas.
                     </p>
                   </>
@@ -146,6 +280,8 @@ export default function Trunk() {
                       : 'Choose "Available for licensing" to set usage terms for the documented concept.'}
                   </p>
                 )}
+
+                <Proposals item={t} />
 
                 <div className="label mt-4">Attribution</div>
                 <p className="text-sm">Creator: <strong>{t.creator}</strong></p>

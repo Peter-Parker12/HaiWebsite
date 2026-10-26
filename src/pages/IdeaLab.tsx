@@ -2,7 +2,7 @@ import { ArrowDown, ArrowRight, ArrowUp, History, Plus, Trash2, UserPlus } from 
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Chip, Modal, PageHeader } from '../components/ui'
-import { notify, today, uid, useStore } from '../store/store'
+import { notify, today, uid, useStore, useProjectPath } from '../store/store'
 import type { Role } from '../store/types'
 
 const COLORS = ['#3b4a8c', '#c4663d', '#5d7a49', '#d3bc93', '#7a4a6b', '#2f7a7a']
@@ -16,6 +16,7 @@ function move<T>(list: T[], i: number, dir: -1 | 1): T[] {
 }
 
 export default function IdeaLab() {
+  const pp = useProjectPath()
   const { state, update } = useStore()
   const { project } = state
   const nav = useNavigate()
@@ -39,7 +40,7 @@ export default function IdeaLab() {
             className="btn-accent"
             onClick={() => {
               update((s) => notify({ ...s, project: { ...s.project, directionAgreed: true } }, 'Project direction agreed — ready for Resource Mapping'))
-              nav('/resources')
+              nav(pp('resources'))
             }}
           >
             Agree direction <ArrowRight size={16} />
@@ -193,7 +194,7 @@ export default function IdeaLab() {
             onSubmit={(e) => {
               e.preventDefault()
               if (!comment.trim()) return
-              patch({ comments: [...project.comments, { id: uid(), author: 'Mai Tran', text: comment, decision: asDecision }] })
+              patch({ comments: [...project.comments, { id: uid(), author: state.user?.name ?? 'Me', text: comment, decision: asDecision }] })
               setComment('')
               setAsDecision(false)
             }}
