@@ -1,4 +1,4 @@
-import { Bell, Compass, LogOut, RotateCcw } from 'lucide-react'
+import { Bell, Compass, LogOut } from 'lucide-react'
 import { useState } from 'react'
 import { Link, NavLink, Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useRoot } from '../store/store'
@@ -6,7 +6,7 @@ import { useRoot } from '../store/store'
 type NavItem = { to: string; text: string; end?: boolean }
 
 function Navbar() {
-  const { root, setRoot, user, sponsor, logout, reset } = useRoot()
+  const { root, user, sponsor, logout, readNotices } = useRoot()
   const nav = useNavigate()
   const [open, setOpen] = useState(false)
   const kind = user ? 'user' : sponsor ? 'sponsor' : null
@@ -18,6 +18,7 @@ function Navbar() {
           { to: '/my-projects', text: 'Project' },
           { to: '/catalogue', text: 'My Catalogue' },
           { to: '/account', text: 'Account' },
+          ...(user?.staffRole ? [{ to: '/staff', text: 'Moderation' }] : []),
         ]
       : kind === 'sponsor'
         ? [
@@ -65,9 +66,6 @@ function Navbar() {
             </>
           ) : (
             <>
-              <button className="btn-ghost !px-2 !py-1.5" title="Reset demo data" onClick={() => confirm('Reset all demo data to the original sample data?') && reset()}>
-                <RotateCcw size={14} />
-              </button>
               <div className="relative">
                 <button className="btn-ghost relative !px-2 !py-1.5" aria-label="Notifications" onClick={() => setOpen((o) => !o)}>
                   <Bell size={16} />
@@ -77,14 +75,14 @@ function Navbar() {
                   <div className="absolute right-0 top-11 z-40 w-80 rounded-xl border border-cloth-200 bg-white p-3 shadow-lg">
                     <div className="mb-2 flex items-center justify-between">
                       <div className="text-sm font-semibold">Notifications</div>
-                      <button className="text-xs text-indigo2-600 hover:underline" onClick={() => setRoot((r) => ({ ...r, notices: r.notices.map((n) => ({ ...n, read: true })) }))}>
+                      <button className="text-xs text-indigo2-600 hover:underline" onClick={() => void readNotices()}>
                         Mark all read
                       </button>
                     </div>
                     <ul className="max-h-72 space-y-2 overflow-y-auto">
                       {root.notices.slice(0, 15).map((n) => (
                         <li key={n.id} className={`rounded-lg p-2 text-sm ${n.read ? 'text-ink/60' : 'bg-cloth-100'}`}>
-                          {n.text}
+                          {n.link ? <Link to={n.link} onClick={() => setOpen(false)} className="hover:underline">{n.text}</Link> : n.text}
                           <div className="text-xs text-ink/40">{n.date}</div>
                         </li>
                       ))}
@@ -96,8 +94,8 @@ function Navbar() {
               <button
                 className="btn-ghost !px-2 !py-1.5"
                 aria-label="Log out"
-                onClick={() => {
-                  logout()
+                onClick={async () => {
+                  await logout()
                   nav('/')
                 }}
               >
@@ -125,16 +123,31 @@ export function Shell() {
   )
 }
 
+function Loading() {
+  return <div className="py-24 text-center text-sm text-ink/50">Loading…</div>
+}
+
 export function RequireUser() {
-  const { user } = useRoot()
+  const { user, authReady } = useRoot()
   const loc = useLocation()
+  if (!authReady) return <Loading />
   if (!user) return <Navigate to="/login" replace state={{ from: loc.pathname }} />
   return <Outlet />
 }
 
-export function RequireSponsor() {
-  const { sponsor } = useRoot()
+export function RequireStaff() {
+  const { user, authReady } = useRoot()
   const loc = useLocation()
+  if (!authReady) return <Loading />
+  if (!user) return <Navigate to="/login" replace state={{ from: loc.pathname }} />
+  if (!user.staffRole) return <Navigate to="/" replace />
+  return <Outlet />
+}
+
+export function RequireSponsor() {
+  const { sponsor, authReady } = useRoot()
+  const loc = useLocation()
+  if (!authReady) return <Loading />
   if (!sponsor) return <Navigate to="/sponsor/login" replace state={{ from: loc.pathname }} />
   return <Outlet />
 }

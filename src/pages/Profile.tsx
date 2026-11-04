@@ -5,10 +5,13 @@ import { uid, useRoot } from '../store/store'
 import type { User } from '../store/types'
 
 export default function Profile() {
-  const { setRoot, user } = useRoot()
+  const { setRoot, user, saveAccount } = useRoot()
   const [pf, setPf] = useState({ title: '', url: '' })
   if (!user) return null
-  const patch = (p: Partial<User>) => setRoot((r) => ({ ...r, users: r.users.map((u) => (u.id === user.id ? { ...u, ...p } : u)) }))
+  const patch = (p: Partial<User>) => {
+    setRoot((r) => ({ ...r, users: r.users.map((u) => (u.id === user.id ? { ...u, ...p } : u)) }))
+    saveAccount(p)
+  }
 
   return (
     <Page>

@@ -48,11 +48,12 @@ export function AuthShell({
 }
 
 export default function Register() {
-  const { signUpUser, loginUser, loginGoogle } = useRoot()
+  const { signUpUser, demoLogin, demo } = useRoot()
   const nav = useNavigate()
   const [step, setStep] = useState(0)
   const [done, setDone] = useState(false)
   const [err, setErr] = useState('')
+  const [busy, setBusy] = useState(false)
   const [pw, setPw] = useState('')
   const [agree, setAgree] = useState(false)
   const [u, setU] = useState<Omit<User, 'id' | 'portfolio'>>({
@@ -93,29 +94,6 @@ export default function Register() {
 
   return (
     <AuthShell title="Create your account" sub="Free to start. Takes about a minute.">
-      {step === 0 && (
-        <>
-          <button
-            type="button"
-            className="btn-ghost w-full !py-3"
-            onClick={() => {
-              loginGoogle()
-              nav('/')
-            }}
-          >
-            <svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true">
-              <path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z" />
-              <path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4.1 7.1-10.1 7.1-17.5z" />
-              <path fill="#FBBC05" d="M10.5 28.7a14.500 14.500 0 010-9.400l-7.900-6.100a24 24 0 000 21.600l7.900-6.100z" />
-              <path fill="#34A853" d="M24 48c6.500 0 11.900-2.100 15.900-5.800l-7.500-5.800c-2.100 1.400-4.800 2.300-8.400 2.300-6.300 0-11.600-4.100-13.500-9.800l-7.900 6.100C6.500 42.600 14.600 48 24 48z" />
-            </svg>
-            Continue with Google
-          </button>
-          <div className="my-4 flex items-center gap-3 text-xs text-ink/40">
-            <span className="h-px flex-1 bg-cloth-200" /> or sign up with email <span className="h-px flex-1 bg-cloth-200" />
-          </div>
-        </>
-      )}
       <ol className="mb-6 flex gap-2">
         {STEPS.map((s, i) => (
           <li key={s} className={`flex-1 border-t-4 pt-2 text-xs font-semibold ${i <= step ? 'border-terra-500' : 'border-cloth-200 text-ink/40'}`}>
@@ -126,11 +104,19 @@ export default function Register() {
 
       <form
         className="space-y-4"
-        onSubmit={(e) => {
+        onSubmit={async (e) => {
           e.preventDefault()
           if (step < 2) return next()
-          signUpUser({ ...u, portfolio })
-          setDone(true)
+          setErr('')
+          setBusy(true)
+          try {
+            await signUpUser({ ...u, portfolio, password: pw })
+            setDone(true)
+          } catch (e2) {
+            setErr(e2 instanceof Error ? e2.message : 'Something went wrong.')
+          } finally {
+            setBusy(false)
+          }
         }}
       >
         {step === 0 && (
@@ -146,7 +132,7 @@ export default function Register() {
             <div>
               <label className="label">Password</label>
               <input className="input" type="password" value={pw} onChange={(e) => setPw(e.target.value)} autoComplete="new-password" />
-              <p className="mt-1 text-xs text-ink/50">Demo only: the password is not stored.</p>
+              <p className="mt-1 text-xs text-ink/50">At least 8 characters.</p>
             </div>
             <label className="flex items-start gap-2 text-sm">
               <input type="checkbox" className="mt-1" checked={agree} onChange={(e) => setAgree(e.target.checked)} />
@@ -247,22 +233,28 @@ export default function Register() {
               <ArrowLeft size={16} /> Back
             </button>
           )}
-          <button className="btn-primary flex-1 !py-3">{step < 2 ? 'Continue' : 'Create account'}</button>
+          <button className="btn-primary flex-1 !py-3" disabled={busy}>{step < 2 ? 'Continue' : busy ? 'Creating account…' : 'Create account'}</button>
         </div>
       </form>
 
       <p className="mt-6 text-center text-sm text-ink/70">
         Already have an account? <Link to="/login" className="font-semibold underline">Log in</Link>
       </p>
-      <button
-        className="mt-2 block w-full text-center text-sm text-ink/60 underline"
-        onClick={() => {
-          loginUser('u1')
-          nav('/')
-        }}
-      >
-        Skip and explore with a demo account
-      </button>
+      {demo && (
+        <button
+          className="mt-2 block w-full text-center text-sm text-ink/60 underline"
+          onClick={async () => {
+            try {
+              await demoLogin('user')
+              nav('/')
+            } catch (e2) {
+              setErr(e2 instanceof Error ? e2.message : 'Something went wrong.')
+            }
+          }}
+        >
+          Skip and explore with a demo account
+        </button>
+      )}
     </AuthShell>
   )
 }

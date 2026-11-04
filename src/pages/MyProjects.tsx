@@ -2,6 +2,7 @@ import { Plus, Sparkles } from 'lucide-react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import ProjectCard from '../components/ProjectCard'
+import TypePicker from '../components/TypePicker'
 import { Modal, Page, PageHeader } from '../components/ui'
 import { useRoot } from '../store/store'
 import type { ProjectStatus } from '../store/types'
@@ -13,10 +14,12 @@ const GROUPS: { status: ProjectStatus; title: string; empty: string }[] = [
 ]
 
 export default function MyProjects() {
-  const { root, user, createProject, loadSample } = useRoot()
+  const { root, user, createProject, loadSample, dataReady } = useRoot()
   const nav = useNavigate()
   const [open, setOpen] = useState(false)
-  const [f, setF] = useState({ title: '', tagline: '', discipline: '', location: '' })
+  const [f, setF] = useState({ title: '', tagline: '', discipline: '', location: '', types: [] as string[] })
+  const [err, setErr] = useState('')
+  const [busy, setBusy] = useState(false)
   const mine = root.projects.filter((p) => p.ownerId === user?.id)
 
   return (
@@ -32,12 +35,14 @@ export default function MyProjects() {
         }
       />
 
-      {mine.length === 0 && (
+      {!dataReady && <p className="text-sm text-ink/50">Loading…</p>}
+
+      {dataReady && mine.length === 0 && (
         <div className="card text-center">
           <p className="text-sm text-ink/70">You have no projects yet. Start a blank one or explore a filled-in example.</p>
           <div className="mt-4 flex justify-center gap-2">
             <button className="btn-primary" onClick={() => setOpen(true)}><Plus size={16} /> New project</button>
-            <button className="btn-ghost" onClick={() => nav(`/my-projects/${loadSample()}/overview`)}>
+            <button className="btn-ghost" onClick={async () => nav(`/my-projects/${await loadSample()}/overview`)}>
               <Sparkles size={16} /> Load sample project
             </button>
           </div>
@@ -67,12 +72,21 @@ export default function MyProjects() {
         <Modal title="New project" onClose={() => setOpen(false)}>
           <form
             className="space-y-3"
-            onSubmit={(e) => {
+            onSubmit={async (e) => {
               e.preventDefault()
-              if (!f.title.trim()) return
-              const id = createProject(f)
-              setOpen(false)
-              nav(`/my-projects/${id}/overview`)
+              if (!f.title.trim()) return setErr('Please give the project a title.')
+              if (f.types.length === 0) return setErr('Choose a project type.')
+              setErr('')
+              setBusy(true)
+              try {
+                const id = await createProject(f)
+                setOpen(false)
+                nav(`/my-projects/${id}/overview`)
+              } catch (e2) {
+                setErr(e2 instanceof Error ? e2.message : 'Something went wrong.')
+              } finally {
+                setBusy(false)
+              }
             }}
           >
             <div>
@@ -93,7 +107,9 @@ export default function MyProjects() {
                 <input className="input" value={f.location} onChange={(e) => setF({ ...f, location: e.target.value })} />
               </div>
             </div>
-            <button className="btn-primary w-full">Create project</button>
+            <TypePicker value={f.types} onChange={(types) => setF({ ...f, types })} />
+            {err && <p className="text-sm text-red-600">{err}</p>}
+            <button className="btn-primary w-full" disabled={busy}>{busy ? 'Creating…' : 'Create project'}</button>
           </form>
         </Modal>
       )}

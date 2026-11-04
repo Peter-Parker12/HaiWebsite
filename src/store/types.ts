@@ -201,6 +201,7 @@ export interface Notice {
   text: string
   date: string
   read: boolean
+  link?: string
 }
 
 export type UserRole = 'Artist' | 'Curator' | 'Cultural practitioner' | 'Organisation representative'
@@ -215,6 +216,8 @@ export interface User {
   bio: string
   goals: string[]
   portfolio: { id: string; title: string; url: string }[]
+  /** Set for moderation staff. */
+  staffRole?: 'admin' | 'ops' | null
 }
 
 /** Everything that belongs to a single project. */
@@ -254,6 +257,16 @@ export interface ProjectRecord {
   stage: string
   tags: string[]
   updates: { date: string; text: string }[]
+  /** One primary type, optionally one secondary (see projectTypes.ts). */
+  types: string[]
+  /** Type-specific details, keyed by the field keys in projectTypes.ts. */
+  details: Record<string, unknown>
+  ownerName?: string
+  /** Taken down by moderators; hidden from Home until restored. */
+  removed?: boolean
+  removedReason?: string
+  /** Workspace version from the server, used to detect conflicting saves. */
+  version?: number
   ws: Workspace
 }
 
@@ -280,6 +293,7 @@ export interface Support {
   message: string
   status: 'Requested' | 'Accepted' | 'Declined'
   date: string
+  byName?: string
 }
 
 export interface Session {

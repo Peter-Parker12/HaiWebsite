@@ -67,7 +67,7 @@ export function SponsorInvestments() {
 }
 
 export function SponsorWatchlist() {
-  const { root, setRoot, sponsor } = useRoot()
+  const { root, toggleWatch, sponsor } = useRoot()
   if (!sponsor) return null
   const recs = root.watchlist
     .filter((w) => w.sponsorId === sponsor.id)
@@ -86,7 +86,7 @@ export function SponsorWatchlist() {
               <ProjectCard rec={p} />
               <button
                 className="mt-1 px-1 text-xs text-ink/60 underline"
-                onClick={() => setRoot((r) => ({ ...r, watchlist: r.watchlist.filter((w) => !(w.sponsorId === sponsor.id && w.projectId === p.id)) }))}
+                onClick={() => void toggleWatch(p.id, false)}
               >
                 Remove from watchlist
               </button>
@@ -99,9 +99,12 @@ export function SponsorWatchlist() {
 }
 
 export function SponsorAccount() {
-  const { setRoot, sponsor } = useRoot()
+  const { setRoot, sponsor, saveAccount } = useRoot()
   if (!sponsor) return null
-  const patch = (p: Partial<Sponsor>) => setRoot((r) => ({ ...r, sponsors: r.sponsors.map((s) => (s.id === sponsor.id ? { ...s, ...p } : s)) }))
+  const patch = (p: Partial<Sponsor>) => {
+    setRoot((r) => ({ ...r, sponsors: r.sponsors.map((s) => (s.id === sponsor.id ? { ...s, ...p } : s)) }))
+    saveAccount(p)
+  }
   const list = (v: string) => v.split(',').map((x) => x.trim()).filter(Boolean)
 
   return (

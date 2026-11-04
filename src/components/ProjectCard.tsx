@@ -1,6 +1,7 @@
 import { MapPin } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { budgetOf, money, useRoot } from '../store/store'
+import { typeById } from '../store/projectTypes'
+import { budgetOf, money } from '../store/store'
 import type { ProjectRecord } from '../store/types'
 import { Chip, ProgressBar } from './ui'
 
@@ -16,8 +17,6 @@ export function openNeeds(rec: ProjectRecord) {
 }
 
 export default function ProjectCard({ rec, to }: { rec: ProjectRecord; to?: string }) {
-  const { root } = useRoot()
-  const owner = root.users.find((u) => u.id === rec.ownerId)
   const needs = openNeeds(rec)
   const b = budgetOf(rec.ws)
 
@@ -28,8 +27,14 @@ export default function ProjectCard({ rec, to }: { rec: ProjectRecord; to?: stri
         <Chip>{rec.status}</Chip>
       </div>
       <div className="mt-1 text-xs text-ink/50">
-        by {owner?.name ?? 'Unknown'} · <MapPin size={11} className="inline" /> {rec.location}
+        by {rec.ownerName ?? 'Unknown'} · <MapPin size={11} className="inline" /> {rec.location}
       </div>
+      {rec.types.length > 0 && (
+        <div className="mt-1 text-xs font-medium text-terra-600">
+          {typeById(rec.types[0])?.label ?? rec.types[0]}
+          {rec.types.length > 1 && ` +${rec.types.length - 1}`}
+        </div>
+      )}
       <p className="mt-2 flex-1 text-sm text-ink/70">{rec.oneLiner}</p>
       <div className="mt-3 flex flex-wrap gap-1">
         {rec.tags.map((t) => (

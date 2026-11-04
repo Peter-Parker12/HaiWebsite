@@ -26,7 +26,7 @@ function useFilters() {
 }
 
 export default function Home() {
-  const { root, user, sponsor } = useRoot()
+  const { root, user, sponsor, dataReady } = useRoot()
   const f = useFilters()
   const listed = root.projects.filter((p) => p.listed)
   const uniq = (fn: (p: (typeof listed)[number]) => string) => [...new Set(listed.map(fn))].sort()
@@ -136,8 +136,8 @@ export default function Home() {
           </aside>
 
           <div>
-            <div className="mb-3 text-sm text-ink/60">{results.length} project{results.length === 1 ? '' : 's'}</div>
-            {results.length === 0 ? (
+            <div className="mb-3 text-sm text-ink/60">{dataReady ? `${results.length} project${results.length === 1 ? '' : 's'}` : 'Loading…'}</div>
+            {!dataReady ? null : results.length === 0 ? (
               <div className="card text-sm text-ink/60">No projects match. Try clearing a filter.</div>
             ) : (
               <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">

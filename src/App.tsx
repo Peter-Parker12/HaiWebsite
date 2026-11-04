@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
-import { RequireSponsor, RequireUser, Shell } from './components/Shell'
+import { RequireSponsor, RequireStaff, RequireUser, Shell } from './components/Shell'
 import Activation from './pages/Activation'
 import Catalogue from './pages/Catalogue'
 import Discover from './pages/Discover'
@@ -7,6 +7,7 @@ import Home from './pages/Home'
 import IdeaLab from './pages/IdeaLab'
 import Login from './pages/Login'
 import Marketplace from './pages/Marketplace'
+import Moderation from './pages/Moderation'
 import MyProjects from './pages/MyProjects'
 import Overview from './pages/Overview'
 import Profile from './pages/Profile'
@@ -42,6 +43,10 @@ export default function App() {
             <Route path="funding" element={<Marketplace />} />
             <Route path="activation" element={<Activation />} />
           </Route>
+        </Route>
+
+        <Route element={<RequireStaff />}>
+          <Route path="/staff" element={<Moderation />} />
         </Route>
 
         <Route element={<RequireSponsor />}>

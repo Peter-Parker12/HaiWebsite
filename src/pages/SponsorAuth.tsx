@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useRoot } from '../store/store'
 import type { SponsorType } from '../store/types'
-import { GoogleButton } from './Login'
 import { AuthShell } from './Register'
 
 const HEAD = {
@@ -11,61 +10,57 @@ const HEAD = {
 }
 
 export function SponsorLogin() {
-  const { root, loginSponsor, signUpSponsor } = useRoot()
+  const { loginSponsor, demoLogin, demo } = useRoot()
   const nav = useNavigate()
   const from = (useLocation().state as { from?: string } | null)?.from ?? '/'
   const [email, setEmail] = useState('')
   const [pw, setPw] = useState('')
   const [err, setErr] = useState('')
+  const [busy, setBusy] = useState(false)
+
+  const run = async (fn: () => Promise<void>) => {
+    setErr('')
+    setBusy(true)
+    try {
+      await fn()
+      nav(from)
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : 'Something went wrong.')
+    } finally {
+      setBusy(false)
+    }
+  }
 
   return (
     <AuthShell title="Sponsor login" sub="For foundations, companies and individuals who support the arts." {...HEAD}>
-      <GoogleButton
-        onClick={() => {
-          const s = root.sponsors.find((x) => x.email === 'sponsor@gmail.com')
-          if (s) loginSponsor(s.id)
-          else signUpSponsor({ name: 'Google Sponsor', email: 'sponsor@gmail.com', type: 'Individual', focus: [], regions: [], ticket: '', bio: '' })
-          nav(from)
-        }}
-      />
-      <div className="my-4 flex items-center gap-3 text-xs text-ink/40">
-        <span className="h-px flex-1 bg-cloth-200" /> or log in with email <span className="h-px flex-1 bg-cloth-200" />
-      </div>
       <form
         className="space-y-4"
         onSubmit={(e) => {
           e.preventDefault()
-          const s = root.sponsors.find((x) => x.email.toLowerCase() === email.trim().toLowerCase())
-          if (!s) return setErr('No sponsor account found for that email. Register or use the demo sponsor.')
-          if (!pw) return setErr('Enter your password.')
-          loginSponsor(s.id)
-          nav(from)
+          if (!email.trim() || !pw) return setErr('Enter your email and password.')
+          void run(() => loginSponsor(email, pw))
         }}
       >
         <div>
           <label className="label">Email</label>
-          <input className="input" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <input className="input" type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />
         </div>
         <div>
           <label className="label">Password</label>
-          <input className="input" type="password" value={pw} onChange={(e) => setPw(e.target.value)} />
+          <input className="input" type="password" value={pw} onChange={(e) => setPw(e.target.value)} autoComplete="current-password" />
         </div>
         {err && <p className="text-sm text-red-600">{err}</p>}
-        <button className="btn-primary w-full !py-3">Log in</button>
+        <button className="btn-primary w-full !py-3" disabled={busy}>{busy ? 'Logging in…' : 'Log in'}</button>
       </form>
       <p className="mt-6 text-center text-sm text-ink/70">
         New sponsor? <Link to="/sponsor/register" className="font-semibold underline">Register</Link> ·{' '}
         <Link to="/login" className="font-semibold underline">Creator login</Link>
       </p>
-      <button
-        className="mt-2 block w-full text-center text-sm text-ink/60 underline"
-        onClick={() => {
-          loginSponsor('s1')
-          nav(from)
-        }}
-      >
-        Continue with a demo sponsor
-      </button>
+      {demo && (
+        <button className="mt-2 block w-full text-center text-sm text-ink/60 underline" disabled={busy} onClick={() => void run(() => demoLogin('sponsor'))}>
+          Continue with a demo sponsor
+        </button>
+      )}
     </AuthShell>
   )
 }
@@ -76,19 +71,28 @@ export function SponsorRegister() {
   const [f, setF] = useState({ name: '', email: '', type: 'Foundation' as SponsorType, focus: '', regions: '', ticket: '', bio: '' })
   const [pw, setPw] = useState('')
   const [err, setErr] = useState('')
+  const [busy, setBusy] = useState(false)
   const list = (v: string) => v.split(',').map((x) => x.trim()).filter(Boolean)
 
   return (
     <AuthShell title="Register as a sponsor" sub="Tell creators who you are and what you like to support." {...HEAD}>
       <form
         className="space-y-4"
-        onSubmit={(e) => {
+        onSubmit={async (e) => {
           e.preventDefault()
           if (!f.name.trim()) return setErr('Please enter your name or organisation.')
           if (!/^\S+@\S+\.\S+$/.test(f.email)) return setErr('Please enter a valid email address.')
           if (pw.length < 8) return setErr('Password must be at least 8 characters.')
-          signUpSponsor({ name: f.name, email: f.email, type: f.type, focus: list(f.focus), regions: list(f.regions), ticket: f.ticket, bio: f.bio })
-          nav('/')
+          setErr('')
+          setBusy(true)
+          try {
+            await signUpSponsor({ name: f.name, email: f.email, type: f.type, focus: list(f.focus), regions: list(f.regions), ticket: f.ticket, bio: f.bio, password: pw })
+            nav('/')
+          } catch (e2) {
+            setErr(e2 instanceof Error ? e2.message : 'Something went wrong.')
+          } finally {
+            setBusy(false)
+          }
         }}
       >
         <div>
@@ -98,11 +102,11 @@ export function SponsorRegister() {
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="label">Email</label>
-            <input className="input" type="email" value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} />
+            <input className="input" type="email" value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} autoComplete="email" />
           </div>
           <div>
             <label className="label">Password</label>
-            <input className="input" type="password" value={pw} onChange={(e) => setPw(e.target.value)} />
+            <input className="input" type="password" value={pw} onChange={(e) => setPw(e.target.value)} autoComplete="new-password" />
           </div>
         </div>
         <div>
@@ -134,7 +138,7 @@ export function SponsorRegister() {
           <textarea className="input h-20" value={f.bio} onChange={(e) => setF({ ...f, bio: e.target.value })} />
         </div>
         {err && <p className="text-sm text-red-600">{err}</p>}
-        <button className="btn-primary w-full !py-3">Create sponsor account</button>
+        <button className="btn-primary w-full !py-3" disabled={busy}>{busy ? 'Creating account…' : 'Create sponsor account'}</button>
       </form>
       <p className="mt-6 text-center text-sm text-ink/70">
         Already registered? <Link to="/sponsor/login" className="font-semibold underline">Log in</Link>
