@@ -48,5 +48,6 @@ npm install && npm run dev
 
 A project can only be listed on Home once its mandatory fields are complete (see `src/store/projectTypes.ts`).
 Cover/artwork uploads, the admin screen, email and Google/Apple/Facebook sign-in are the next steps.
+The Board tab is an Excalidraw whiteboard (several boards per project, autosaved, PNG/SVG export, leader-only).
 Idea Lab discussion, outreach and the plan are part of the workspace and are visible only to the project leader.
 The matching directory (Matching tab) is still sample data that lives in the browser.

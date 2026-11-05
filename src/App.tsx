@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { RequireSponsor, RequireStaff, RequireUser, Shell } from './components/Shell'
 import Activation from './pages/Activation'
+import Board from './pages/Board'
 import Catalogue from './pages/Catalogue'
 import Discover from './pages/Discover'
 import Home from './pages/Home'
@@ -38,6 +39,7 @@ export default function App() {
             <Route index element={<Navigate to="overview" replace />} />
             <Route path="overview" element={<Overview />} />
             <Route path="idea-lab" element={<IdeaLab />} />
+            <Route path="board" element={<Board />} />
             <Route path="resources" element={<Resources />} />
             <Route path="discover" element={<Discover />} />
             <Route path="funding" element={<Marketplace />} />

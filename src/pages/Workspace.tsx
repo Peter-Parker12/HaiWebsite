@@ -6,6 +6,7 @@ import { ProjectScope, useRoot, useStore } from '../store/store'
 const TABS = [
   ['overview', 'Overview'],
   ['idea-lab', 'Idea Lab'],
+  ['board', 'Board'],
   ['resources', 'Resources'],
   ['discover', 'Matching'],
   ['funding', 'Funding'],

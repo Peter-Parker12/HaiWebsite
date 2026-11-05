@@ -6,6 +6,7 @@ import { ZodError } from 'zod'
 import { config } from './config.js'
 import { migrate, pool, waitForDb } from './db.js'
 import { authRoutes } from './routes/auth.js'
+import { boardRoutes } from './routes/boards.js'
 import { projectRoutes } from './routes/projects.js'
 import { staffRoutes } from './routes/staff.js'
 import { supportRoutes } from './routes/supports.js'
@@ -32,6 +33,7 @@ app.get('/api/health', async () => {
 
 await app.register(authRoutes)
 await app.register(projectRoutes)
+await app.register(boardRoutes)
 await app.register(supportRoutes)
 await app.register(staffRoutes)
 
