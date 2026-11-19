@@ -130,8 +130,8 @@ export default function IdeaLab() {
             setMoodDraft({ title: '', note: '' })
           }}
         >
-          <input className="input !w-48" placeholder="Reference title" value={moodDraft.title} onChange={(e) => setMoodDraft({ ...moodDraft, title: e.target.value })} />
-          <input className="input !w-64" placeholder="Note" value={moodDraft.note} onChange={(e) => setMoodDraft({ ...moodDraft, note: e.target.value })} />
+          <input className="input sm:!w-48" placeholder="Reference title" value={moodDraft.title} onChange={(e) => setMoodDraft({ ...moodDraft, title: e.target.value })} />
+          <input className="input sm:!w-64" placeholder="Note" value={moodDraft.note} onChange={(e) => setMoodDraft({ ...moodDraft, note: e.target.value })} />
           <button className="btn-primary">
             <Plus size={14} /> Add reference
           </button>

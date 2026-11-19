@@ -97,7 +97,7 @@ export default function MyProjects() {
               <label className="label">One-line pitch</label>
               <input className="input" value={f.tagline} onChange={(e) => setF({ ...f, tagline: e.target.value })} />
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid gap-3 sm:grid-cols-2">
               <div>
                 <label className="label">Discipline</label>
                 <input className="input" value={f.discipline} onChange={(e) => setF({ ...f, discipline: e.target.value })} />

@@ -111,6 +111,8 @@ export default function ProjectDetail() {
     }
   }
 
+  const canSupport = !isOwner && !rec.removed && rec.status !== 'Closed'
+
   return (
     <Page>
       <Link to="/" className="inline-flex items-center gap-1 text-sm text-ink/70 hover:underline">
@@ -227,8 +229,8 @@ export default function ProjectDetail() {
             </div>
           </div>
 
-          <div className="card">
-            <div className="text-lg font-bold">Support this project</div>
+          <div className="card scroll-mt-4" id="support">
+            <div className="card-title">Support this project</div>
             {isOwner ? (
               <Link to={`/my-projects/${rec.id}/overview`} className="btn-primary mt-3 w-full">Open workspace</Link>
             ) : rec.removed ? (
@@ -281,6 +283,15 @@ export default function ProjectDetail() {
           )}
         </aside>
       </div>
+
+      {canSupport && (
+        <>
+          <div className="h-20 lg:hidden" aria-hidden="true" />
+          <div className="fixed inset-x-0 bottom-0 z-20 border-t border-cloth-200 bg-cloth-50/95 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur lg:hidden">
+            <a href="#support" className="btn-primary w-full">Support this project</a>
+          </div>
+        </>
+      )}
 
       {mod && (
         <Modal title={mod === 'report' ? 'Report this project' : 'Remove this project'} onClose={() => setMod(null)}>

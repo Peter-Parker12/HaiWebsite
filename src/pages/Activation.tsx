@@ -178,7 +178,7 @@ export default function Activation() {
                         <div className="mt-1 text-xs text-ink/70">
                           {plan.phases.find((p) => p.id === t.phaseId)?.name}
                         </div>
-                        <div className="mt-2 flex items-center gap-2">
+                        <div className="mt-2 grid gap-2 sm:grid-cols-2">
                           <select className="input !py-1 text-xs" value={t.owner} onChange={(e) => setTask(t.id, { owner: e.target.value })}>
                             {project.collaborators.filter((c) => c.role !== 'Viewer').map((c) => <option key={c.id}>{c.name}</option>)}
                           </select>

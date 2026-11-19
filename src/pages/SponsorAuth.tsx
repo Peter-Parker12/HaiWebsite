@@ -99,7 +99,7 @@ export function SponsorRegister() {
           <label className="label">Name or organisation</label>
           <input className="input" value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} />
         </div>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid gap-3 sm:grid-cols-2">
           <div>
             <label className="label">Email</label>
             <input className="input" type="email" value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} autoComplete="email" />
@@ -123,7 +123,7 @@ export function SponsorRegister() {
           <label className="label">Areas you support (comma separated)</label>
           <input className="input" placeholder="Textiles, Community arts" value={f.focus} onChange={(e) => setF({ ...f, focus: e.target.value })} />
         </div>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid gap-3 sm:grid-cols-2">
           <div>
             <label className="label">Regions</label>
             <input className="input" placeholder="Europe, UK" value={f.regions} onChange={(e) => setF({ ...f, regions: e.target.value })} />

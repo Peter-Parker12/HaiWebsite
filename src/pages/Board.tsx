@@ -225,7 +225,7 @@ export default function Board() {
                 {b.name}
               </button>
             ))}
-            <span className="ml-auto flex items-center gap-2 text-xs text-ink/70">
+            <span className="flex flex-wrap items-center gap-2 text-xs text-ink/70 sm:ml-auto">
               {status === 'saving' ? 'Saving…' : status === 'error' ? 'Could not save, retrying on your next change' : status === 'conflict' ? '' : 'All changes saved'}
               <button className="btn-ghost !px-2 !py-1" title="Rename board" onClick={() => void rename()}><Pencil size={14} /></button>
               <button className="btn-ghost !px-2 !py-1" title="Export PNG" disabled={!scene} onClick={() => void exportAs('png')}><Download size={14} /> PNG</button>
@@ -234,7 +234,7 @@ export default function Board() {
             </span>
           </div>
 
-          <div className="h-[72vh] overflow-hidden rounded-lg border border-cloth-200 bg-white">
+          <div className="h-[70dvh] min-h-[420px] overflow-hidden rounded-lg border border-cloth-200 bg-white">
             {scene && activeId ? (
               <Suspense fallback={<p className="p-6 text-sm text-ink/70">Loading whiteboard…</p>}>
                 <BoardEditor key={activeId} scene={scene} onChange={onChange} onReady={setHandle} />

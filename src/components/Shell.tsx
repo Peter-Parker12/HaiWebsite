@@ -35,7 +35,7 @@ function Navbar() {
   const name = (user?.name ?? sponsor?.name ?? '').split(' ')[0]
 
   return (
-    <header className="sticky top-0 z-30 border-b border-cloth-200 bg-cloth-50/95 backdrop-blur">
+    <header className="z-30 border-b md:sticky md:top-0 border-cloth-200 bg-cloth-50/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-6 gap-y-2 px-5 py-3">
         <Link to="/" className="flex items-center gap-2" aria-label="Terrarium home">
           <img src="/brand/lockup-horizontal.svg" alt="Terrarium" className="h-8 w-auto" />
@@ -72,7 +72,7 @@ function Navbar() {
                   {unread > 0 && <span className="absolute -right-1 -top-1 rounded-full bg-terra-600 px-1.5 text-[10px] text-white">{unread}</span>}
                 </button>
                 {open && (
-                  <div className="absolute right-0 top-11 z-40 w-80 rounded-xl border border-cloth-200 bg-white p-3 shadow-lg">
+                  <div className="fixed inset-x-3 top-16 z-40 rounded-xl sm:absolute sm:inset-x-auto sm:right-0 sm:top-11 sm:w-80 rounded-xl border border-cloth-200 bg-white p-3 shadow-lg">
                     <div className="mb-2 flex items-center justify-between">
                       <div className="text-sm font-semibold">Notifications</div>
                       <button className="text-xs text-indigo2-600 hover:underline" onClick={() => void readNotices()}>

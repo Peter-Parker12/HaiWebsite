@@ -38,6 +38,8 @@ function useFilters() {
 export default function Home() {
   const { root, user, sponsor, dataReady } = useRoot()
   const f = useFilters()
+  const [showFilters, setShowFilters] = useState(false)
+  const activeFilters = [f.discipline, f.location, f.stage].filter(Boolean).length + f.needs.length + (f.status !== 'Seeking support' ? 1 : 0)
   const listed = root.projects.filter((p) => p.listed)
   const uniq = (fn: (p: (typeof listed)[number]) => string) => [...new Set(listed.map(fn))].sort()
 
@@ -105,6 +107,10 @@ export default function Home() {
               <Search size={16} className="absolute left-3 top-3 text-ink/70" aria-hidden="true" />
               <input className="input !pl-9" placeholder="Search projects" aria-label="Search projects" value={f.q} onChange={(e) => f.setQ(e.target.value)} />
             </div>
+            <button className="btn-ghost w-full lg:hidden" aria-expanded={showFilters} onClick={() => setShowFilters((v) => !v)}>
+              {showFilters ? 'Hide filters' : `Filters${activeFilters ? ` (${activeFilters} active)` : ''}`}
+            </button>
+            <div className={`space-y-5 ${showFilters ? '' : 'hidden'} lg:block`}>
             <div>
               <div className="label">Status</div>
               <div className="flex flex-wrap gap-2 lg:flex-col lg:items-start">
@@ -149,6 +155,7 @@ export default function Home() {
                 </select>
               </div>
             ))}
+            </div>
           </aside>
 
           <div>
