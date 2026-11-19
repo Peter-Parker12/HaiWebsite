@@ -407,7 +407,7 @@ export function ProjectScope({ children }: { children: ReactNode }) {
     [root, rec, user, update, id, saveStatus],
   )
 
-  if (!dataReady) return <div className="py-24 text-center text-sm text-ink/50">Loading…</div>
+  if (!dataReady) return <div className="py-24 text-center text-sm text-ink/70">Loading…</div>
   // Only the project leader may open the workspace.
   if (!value || !rec || rec.ownerId !== user?.id) return <Navigate to="/my-projects" replace />
   return <ScopeContext.Provider value={value}>{children}</ScopeContext.Provider>

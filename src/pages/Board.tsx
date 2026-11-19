@@ -202,7 +202,7 @@ export default function Board() {
         }
       />
 
-      {err && <p className="mb-3 text-sm text-red-600">{err}</p>}
+      {err && <p className="mb-3 text-sm text-red-700">{err}</p>}
       {status === 'conflict' && (
         <div className="mb-3 flex items-center justify-between rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-800">
           This board was changed somewhere else, so your latest edits were not saved.
@@ -211,7 +211,7 @@ export default function Board() {
       )}
 
       {loading ? (
-        <p className="text-sm text-ink/50">Loading…</p>
+        <p className="text-sm text-ink/70">Loading…</p>
       ) : boards.length === 0 ? (
         <div className="card text-center">
           <p className="text-sm text-ink/70">No boards yet. Create one to start sketching ideas, layouts or storyboards.</p>
@@ -225,8 +225,8 @@ export default function Board() {
                 {b.name}
               </button>
             ))}
-            <span className="ml-auto flex items-center gap-2 text-xs text-ink/50">
-              {status === 'saving' ? 'Saving…' : status === 'error' ? 'Could not save' : status === 'conflict' ? '' : 'All changes saved'}
+            <span className="ml-auto flex items-center gap-2 text-xs text-ink/70">
+              {status === 'saving' ? 'Saving…' : status === 'error' ? 'Could not save, retrying on your next change' : status === 'conflict' ? '' : 'All changes saved'}
               <button className="btn-ghost !px-2 !py-1" title="Rename board" onClick={() => void rename()}><Pencil size={14} /></button>
               <button className="btn-ghost !px-2 !py-1" title="Export PNG" disabled={!scene} onClick={() => void exportAs('png')}><Download size={14} /> PNG</button>
               <button className="btn-ghost !px-2 !py-1" title="Export SVG" disabled={!scene} onClick={() => void exportAs('svg')}><Download size={14} /> SVG</button>
@@ -236,14 +236,14 @@ export default function Board() {
 
           <div className="h-[72vh] overflow-hidden rounded-lg border border-cloth-200 bg-white">
             {scene && activeId ? (
-              <Suspense fallback={<p className="p-6 text-sm text-ink/50">Loading whiteboard…</p>}>
+              <Suspense fallback={<p className="p-6 text-sm text-ink/70">Loading whiteboard…</p>}>
                 <BoardEditor key={activeId} scene={scene} onChange={onChange} onReady={setHandle} />
               </Suspense>
             ) : (
-              <p className="p-6 text-sm text-ink/50">Loading board…</p>
+              <p className="p-6 text-sm text-ink/70">Loading board…</p>
             )}
           </div>
-          <p className="mt-2 text-xs text-ink/50">Images dropped onto the board are stored inside it, so keep boards under about 6 MB.</p>
+          <p className="mt-2 text-xs text-ink/70">Images dropped onto the board are stored inside it, so keep boards under about 6 MB.</p>
         </>
       )}
     </>

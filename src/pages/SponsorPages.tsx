@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { MossCushion, Sporophyte } from '../components/Moss'
 import ProjectCard from '../components/ProjectCard'
 import { Chip, Page, PageHeader } from '../components/ui'
 import { useRoot } from '../store/store'
@@ -19,12 +20,17 @@ export function SponsorInvestments() {
     <Page>
       <PageHeader step="My investments" title="Projects you support" desc="Projects whose creators accepted your support, and requests still waiting for an answer." />
 
-      {accepted.length === 0 && <div className="card mb-6 text-sm text-ink/70">No accepted support yet. <Link to="/" className="underline">Browse projects</Link>.</div>}
+      {accepted.length === 0 && (
+        <div className="card mb-6 flex flex-col items-center py-8 text-center text-sm text-ink/70">
+          <MossCushion state="dormant" width={144} height={55} seed={7} />
+          <p className="mt-3">No accepted support yet. <Link to="/" className="text-indigo2-600 underline">Browse projects</Link> and offer your help.</p>
+        </div>
+      )}
 
       {groups.map(([label, list]) =>
         list.length === 0 ? null : (
           <section key={label} className="mb-8">
-            <h2 className="mb-3 text-xl font-bold">{label === 'Running' ? 'Active' : 'Completed'} <span className="text-sm font-normal text-ink/50">({list.length})</span></h2>
+            <h2 className="mb-3 heading">{label === 'Running' ? 'Active' : 'Completed'} <span className="text-sm font-normal text-ink/70">({list.length})</span></h2>
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
               {list.map((s) => {
                 const rec = root.projects.find((p) => p.id === s.projectId)!
@@ -32,8 +38,8 @@ export function SponsorInvestments() {
                 return (
                   <div key={s.id}>
                     <ProjectCard rec={rec} />
-                    <div className="mt-1 px-1 text-xs text-ink/60">
-                      <Chip tone="Supporting">Supporting</Chip> {s.kind === 'in-kind' ? `In-kind${res ? `: ${res.name}` : ''}` : 'Interest accepted'} · since {s.date}
+                    <div className="mt-1 flex items-center gap-2 px-1 text-xs text-ink/70">
+                      <Sporophyte height={26} /> <Chip tone="Supporting">Supporting</Chip> {s.kind === 'in-kind' ? `In-kind${res ? `: ${res.name}` : ''}` : 'Interest accepted'} · since {s.date}
                     </div>
                   </div>
                 )
@@ -45,7 +51,7 @@ export function SponsorInvestments() {
 
       {other.length > 0 && (
         <section>
-          <h2 className="mb-3 text-xl font-bold">Requests</h2>
+          <h2 className="mb-3 heading">Requests</h2>
           <div className="card divide-y divide-cloth-100 !p-0">
             {other.map((s) => {
               const rec = root.projects.find((p) => p.id === s.projectId)
@@ -53,7 +59,7 @@ export function SponsorInvestments() {
                 <div key={s.id} className="flex flex-wrap items-center justify-between gap-2 p-4 text-sm">
                   <div>
                     <Link to={`/projects/${s.projectId}`} className="font-semibold hover:underline">{rec?.ws.project.title}</Link>
-                    <div className="text-xs text-ink/50">{s.kind === 'in-kind' ? 'In-kind offer' : 'Interest'} · {s.date}</div>
+                    <div className="text-xs text-ink/70">{s.kind === 'in-kind' ? 'In-kind offer' : 'Interest'} · {s.date}</div>
                   </div>
                   <Chip>{s.status}</Chip>
                 </div>
@@ -85,7 +91,7 @@ export function SponsorWatchlist() {
             <div key={p.id}>
               <ProjectCard rec={p} />
               <button
-                className="mt-1 px-1 text-xs text-ink/60 underline"
+                className="mt-1 px-1 text-xs text-ink/70 underline"
                 onClick={() => void toggleWatch(p.id, false)}
               >
                 Remove from watchlist
@@ -141,7 +147,7 @@ export function SponsorAccount() {
             <textarea className="input h-24" value={sponsor.bio} onChange={(e) => patch({ bio: e.target.value })} />
           </div>
         </div>
-        <p className="mt-3 text-xs text-ink/50">Signed in as {sponsor.email}</p>
+        <p className="mt-3 text-xs text-ink/70">Signed in as {sponsor.email}</p>
       </div>
     </Page>
   )

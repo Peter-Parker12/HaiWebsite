@@ -36,7 +36,7 @@ export default function Catalogue() {
       ) : (
         <div className="card overflow-x-auto !p-0">
           <table className="w-full text-left text-sm">
-            <thead className="border-b border-cloth-200 bg-cloth-100 text-xs uppercase tracking-wide text-ink/50">
+            <thead className="border-b border-cloth-200 bg-cloth-100 text-xs uppercase tracking-wide text-ink/70">
               <tr>
                 <th className="px-4 py-3">Project</th>
                 <th className="px-4 py-3">Your involvement</th>
@@ -49,7 +49,7 @@ export default function Catalogue() {
                 <tr key={r.key} className="border-b border-cloth-100 last:border-0">
                   <td className="px-4 py-3">
                     <Link to={`/projects/${r.rec.id}`} className="font-semibold hover:underline">{r.rec.ws.project.title}</Link>
-                    <div className="text-xs text-ink/50">{r.rec.location} · {r.rec.discipline}</div>
+                    <div className="text-xs text-ink/70">{r.rec.location} · {r.rec.discipline}</div>
                   </td>
                   <td className="px-4 py-3">{r.how}</td>
                   <td className="px-4 py-3">{r.how.startsWith('Team') ? <Chip tone="Collaborator">Member</Chip> : <Chip>{r.status}</Chip>}</td>

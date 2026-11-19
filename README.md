@@ -1,4 +1,6 @@
-# ConceptBridge
+# Terrarium
+
+Brand and UI follow `docs/Terrarium-Brand-Guideline.pdf` (tokens in `tailwind.config.js`, type and component classes in `src/index.css`, logo pack in `public/brand/`).
 
 A directory where artists, curators and cultural practitioners list projects that need support, and sponsors browse and back them.
 

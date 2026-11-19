@@ -43,13 +43,13 @@ export default function Marketplace() {
       <PageHeader
         step="Funding"
         title="Crowdfunding"
-        desc="Raise capital for this project. Simulated — no real payments."
+        desc="Raise capital for this project. Simulated, with no real payments."
       />
 
       {!c ? (
         <div className="card max-w-xl">
-          <h2 className="text-lg font-semibold">Launch a campaign</h2>
-          <p className="mt-1 text-sm text-ink/60">
+          <h2 className="card-title">Launch a campaign</h2>
+          <p className="mt-1 text-sm text-ink/70">
             The suggested goal is the current funding gap from Resource Mapping ({money(b.gap)}). The platform keeps{' '}
             {CROWD_COMMISSION}% of contributions.
           </p>
@@ -80,15 +80,15 @@ export default function Marketplace() {
       ) : (
         <div className="grid gap-4 lg:grid-cols-3">
           <div className="card lg:col-span-2">
-            <h2 className="text-xl font-semibold">{c.title}</h2>
+            <h2 className="heading">{c.title}</h2>
             <div className="mt-4 flex items-end justify-between">
-              <div className="text-3xl font-bold">{money(c.pledged)}</div>
-              <div className="text-sm text-ink/60">of {money(c.goal)} goal</div>
+              <div className="data-lg">{money(c.pledged)}</div>
+              <div className="text-sm text-ink/70">of {money(c.goal)} goal</div>
             </div>
             <div className="mt-2">
               <ProgressBar value={c.pledged} max={c.goal} />
             </div>
-            <div className="mt-5 text-xs font-semibold uppercase tracking-wide text-ink/50">Simulate a pledge</div>
+            <div className="mt-5 text-xs font-semibold uppercase tracking-wide text-ink/70">Simulate a pledge</div>
             <div className="mt-2 flex flex-wrap gap-2">
               {PLEDGES.map((amt) => (
                 <button key={amt} className="btn-primary" onClick={() => pledge(amt)}>
@@ -100,15 +100,15 @@ export default function Marketplace() {
               Platform commission ({c.commissionPct}%): <strong>{money(Math.round((c.pledged * c.commissionPct) / 100))}</strong> · Net to
               project: <strong>{money(Math.round((c.pledged * (100 - c.commissionPct)) / 100))}</strong>
             </div>
-            <p className="mt-3 text-xs text-ink/60">
+            <p className="mt-3 text-xs text-ink/70">
               Net pledges are added to "Production funding" in <Link to={pp('resources')} className="underline">Resource Mapping</Link>, so the
               funding gap in <Link to={pp('activation')} className="underline">Project Activation</Link> shrinks.
             </p>
           </div>
           <div className="card h-fit">
-            <h3 className="text-lg font-semibold">Backers ({c.backers.length})</h3>
+            <h3 className="card-title">Backers ({c.backers.length})</h3>
             {c.backers.length === 0 ? (
-              <p className="mt-2 text-sm text-ink/60">No pledges yet.</p>
+              <p className="mt-2 text-sm text-ink/70">No pledges yet.</p>
             ) : (
               <ul className="mt-3 space-y-2 text-sm">
                 {c.backers.map((bk, i) => (

@@ -20,15 +20,15 @@ function Inner() {
 
   return (
     <Page>
-      <Link to="/my-projects" className="inline-flex items-center gap-1 text-sm text-ink/60 hover:underline">
+      <Link to="/my-projects" className="inline-flex items-center gap-1 text-sm text-ink/70 hover:underline">
         <ArrowLeft size={14} /> My projects
       </Link>
       <div className="mt-2 flex flex-wrap items-center gap-3">
-        <h1 className="text-3xl font-extrabold">{state.project.title}</h1>
+        <h1 className="section-title">{state.project.title}</h1>
         {rec && <Chip>{rec.status}</Chip>}
-        {rec?.listed && <Link to={`/projects/${projectId}`} className="text-sm underline">View public page</Link>}
-        <span className="ml-auto text-xs text-ink/50">
-          {status === 'saving' ? 'Saving…' : status === 'error' ? 'Could not save — retrying on your next change' : status === 'conflict' ? '' : 'All changes saved'}
+        {rec?.listed && <Link to={`/projects/${projectId}`} className="rounded text-sm text-indigo2-600 underline">View public page</Link>}
+        <span className="caption ml-auto text-ink/70">
+          {status === 'saving' ? 'Saving…' : status === 'error' ? 'Could not save, retrying on your next change' : status === 'conflict' ? '' : 'All changes saved'}
         </span>
       </div>
       {status === 'conflict' && (
@@ -43,7 +43,7 @@ function Inner() {
             key={to}
             to={`/my-projects/${projectId}/${to}`}
             className={({ isActive }) =>
-              `whitespace-nowrap border-b-2 px-3 py-2 text-sm font-semibold ${isActive ? 'border-terra-500 text-ink' : 'border-transparent text-ink/60 hover:text-ink'}`
+              `whitespace-nowrap border-b-2 px-3 py-2 text-sm font-semibold transition-colors duration-150 ease-standard ${isActive ? 'border-terra-500 text-ink' : 'border-transparent text-ink/70 hover:text-ink'}`
             }
           >
             {label}

@@ -24,7 +24,7 @@ export default function Profile() {
             </div>
             <div>
               <div className="text-lg font-semibold">{user.name}</div>
-              <div className="text-sm text-ink/60">{user.email}</div>
+              <div className="text-sm text-ink/70">{user.email}</div>
             </div>
             <Chip tone="Editor">{user.role}</Chip>
           </div>
@@ -61,9 +61,9 @@ export default function Profile() {
         </div>
 
         <div className="card h-fit">
-          <h2 className="text-lg font-semibold">Portfolio</h2>
+          <h2 className="card-title">Portfolio</h2>
           <ul className="mt-3 space-y-2">
-            {user.portfolio.length === 0 && <li className="text-sm text-ink/60">No work added yet.</li>}
+            {user.portfolio.length === 0 && <li className="text-sm text-ink/70">No work added yet.</li>}
             {user.portfolio.map((p) => (
               <li key={p.id} className="flex items-center justify-between rounded-lg border border-cloth-200 p-3 text-sm">
                 <a href={p.url || '#'} target="_blank" rel="noreferrer" className="underline">{p.title}</a>

@@ -33,8 +33,8 @@ export default function IdeaLab() {
     <>
       <PageHeader
         step="01 · Idea Lab"
-        title="Develop the idea together"
-        desc="A shared workspace for concepts, references and decisions. People decide the direction; the platform records how the idea evolved."
+        title="Shape the concept together"
+        desc="Collect references, sketch the journey and agree a direction with your collaborators before you look for support. People make every creative decision."
         actions={
           <button
             className="btn-accent"
@@ -51,7 +51,7 @@ export default function IdeaLab() {
       <div className="grid gap-4 lg:grid-cols-3">
         <div className="card lg:col-span-2">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold">Concept statement</h2>
+            <h2 className="card-title">Concept statement</h2>
             <button
               className="btn-ghost"
               onClick={() =>
@@ -71,12 +71,12 @@ export default function IdeaLab() {
             value={project.concept}
             onChange={(e) => patch({ concept: e.target.value, directionAgreed: false })}
           />
-          <p className="mt-2 text-xs text-ink/50">Editing the concept resets "direction agreed" so the team re-confirms.</p>
+          <p className="mt-2 text-xs text-ink/70">Editing the concept resets "direction agreed" so the team re-confirms.</p>
         </div>
 
         <div className="card">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold">Collaborators</h2>
+            <h2 className="card-title">Collaborators</h2>
             <button className="btn-ghost" onClick={() => setInvite(true)}>
               <UserPlus size={14} /> Invite
             </button>
@@ -86,7 +86,7 @@ export default function IdeaLab() {
               <li key={c.id} className="flex items-center justify-between text-sm">
                 <div>
                   <div className="font-medium">{c.name}</div>
-                  <div className="text-xs text-ink/50">{c.discipline}</div>
+                  <div className="text-xs text-ink/70">{c.discipline}</div>
                 </div>
                 <Chip tone={c.role}>{c.role}</Chip>
               </li>
@@ -96,14 +96,14 @@ export default function IdeaLab() {
       </div>
 
       <div className="card mt-4">
-        <h2 className="text-lg font-semibold">Mood board</h2>
+        <h2 className="card-title">Mood board</h2>
         <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {project.mood.map((m, i) => (
             <div key={m.id} className="overflow-hidden rounded-lg border border-cloth-200">
               <div className="h-24" style={{ background: m.color }} />
               <div className="p-3">
                 <div className="text-sm font-medium">{m.title}</div>
-                <div className="text-xs text-ink/60">{m.note}</div>
+                <div className="text-xs text-ink/70">{m.note}</div>
                 <div className="mt-2 flex gap-1">
                   <button className="btn-ghost !px-2 !py-1" aria-label="Move earlier" onClick={() => patch({ mood: move(project.mood, i, -1) })}>
                     <ArrowUp size={12} className="-rotate-90" />
@@ -139,11 +139,11 @@ export default function IdeaLab() {
       </div>
 
       <div className="card mt-4">
-        <h2 className="text-lg font-semibold">Storyboard</h2>
+        <h2 className="card-title">Storyboard</h2>
         <ol className="mt-3 flex gap-3 overflow-x-auto pb-2">
           {project.frames.map((f, i) => (
             <li key={f.id} className="w-56 shrink-0 rounded-lg border border-cloth-200 bg-cloth-50 p-3">
-              <div className="text-xs font-semibold text-terra-500">Frame {i + 1}</div>
+              <div className="text-xs font-semibold text-terra-600">Frame {i + 1}</div>
               <p className="mt-1 text-sm">{f.caption}</p>
               <div className="mt-2 flex gap-1">
                 <button className="btn-ghost !px-2 !py-1" aria-label="Move earlier" onClick={() => patch({ frames: move(project.frames, i, -1) })}>
@@ -177,7 +177,7 @@ export default function IdeaLab() {
 
       <div className="mt-4 grid gap-4 lg:grid-cols-2">
         <div className="card">
-          <h2 className="text-lg font-semibold">Discussion and decisions</h2>
+          <h2 className="card-title">Discussion and decisions</h2>
           <ul className="mt-3 space-y-3">
             {project.comments.map((c) => (
               <li key={c.id} className={`rounded-lg p-3 text-sm ${c.decision ? 'border border-moss-500 bg-moss-100' : 'bg-cloth-50'}`}>
@@ -210,15 +210,15 @@ export default function IdeaLab() {
         </div>
 
         <div className="card">
-          <h2 className="text-lg font-semibold">Version history</h2>
+          <h2 className="card-title">Version history</h2>
           <ul className="mt-3 space-y-3">
             {[...project.versions].reverse().map((v) => (
               <li key={v.id} className="rounded-lg border border-cloth-200 p-3 text-sm">
                 <div className="flex items-center justify-between">
                   <span className="font-medium">{v.label}</span>
-                  <span className="text-xs text-ink/50">{v.date}</span>
+                  <span className="text-xs text-ink/70">{v.date}</span>
                 </div>
-                <p className="mt-1 line-clamp-2 text-ink/60">{v.concept}</p>
+                <p className="mt-1 line-clamp-2 text-ink/70">{v.concept}</p>
                 <button className="mt-2 text-xs text-indigo2-600 hover:underline" onClick={() => patch({ concept: v.concept, directionAgreed: false })}>
                   Restore this version
                 </button>

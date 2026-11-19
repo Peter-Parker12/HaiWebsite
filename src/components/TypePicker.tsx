@@ -13,7 +13,7 @@ export default function TypePicker({ value, onChange }: { value: string[]; onCha
           <option value="">Choose a type</option>
           {PROJECT_TYPES.map((t) => <option key={t.id} value={t.id}>{t.label}</option>)}
         </select>
-        {primary && <p className="mt-1 text-xs text-ink/50">{typeById(primary)?.description}</p>}
+        {primary && <p className="mt-1 text-xs text-ink/70">{typeById(primary)?.description}</p>}
       </div>
       <div>
         <label className="label">Secondary type (optional)</label>

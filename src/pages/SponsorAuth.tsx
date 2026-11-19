@@ -49,7 +49,7 @@ export function SponsorLogin() {
           <label className="label">Password</label>
           <input className="input" type="password" value={pw} onChange={(e) => setPw(e.target.value)} autoComplete="current-password" />
         </div>
-        {err && <p className="text-sm text-red-600">{err}</p>}
+        {err && <p className="text-sm text-red-700">{err}</p>}
         <button className="btn-primary w-full !py-3" disabled={busy}>{busy ? 'Logging in…' : 'Log in'}</button>
       </form>
       <p className="mt-6 text-center text-sm text-ink/70">
@@ -57,7 +57,7 @@ export function SponsorLogin() {
         <Link to="/login" className="font-semibold underline">Creator login</Link>
       </p>
       {demo && (
-        <button className="mt-2 block w-full text-center text-sm text-ink/60 underline" disabled={busy} onClick={() => void run(() => demoLogin('sponsor'))}>
+        <button className="mt-2 block w-full text-center text-sm text-ink/70 underline" disabled={busy} onClick={() => void run(() => demoLogin('sponsor'))}>
           Continue with a demo sponsor
         </button>
       )}
@@ -137,7 +137,7 @@ export function SponsorRegister() {
           <label className="label">About you</label>
           <textarea className="input h-20" value={f.bio} onChange={(e) => setF({ ...f, bio: e.target.value })} />
         </div>
-        {err && <p className="text-sm text-red-600">{err}</p>}
+        {err && <p className="text-sm text-red-700">{err}</p>}
         <button className="btn-primary w-full !py-3" disabled={busy}>{busy ? 'Creating account…' : 'Create sponsor account'}</button>
       </form>
       <p className="mt-6 text-center text-sm text-ink/70">

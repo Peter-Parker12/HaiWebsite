@@ -1,19 +1,29 @@
-import { ArrowRight, Search } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { Search } from 'lucide-react'
+import { useMemo, useState, type CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
+import { HeroMoss, MossCushion } from '../components/Moss'
 import ProjectCard, { NEED_LABEL, openNeeds } from '../components/ProjectCard'
-import { Page } from '../components/ui'
+import { Loading, Page } from '../components/ui'
 import { useRoot } from '../store/store'
 import type { ProjectStatus, ResType } from '../store/types'
 
 const STATUS: ('All' | ProjectStatus)[] = ['All', 'Seeking support', 'Running', 'Closed']
 
 const FAQ = [
-  ['What is ConceptBridge?', 'A platform where artists, curators and cultural practitioners develop ideas together, find the resources they are missing, and turn concepts into projects. Sponsors browse projects that need help.'],
+  ['What is Terrarium?', 'Terrarium is the place where an idea becomes a project. Artists, curators and cultural practitioners list what a project still needs, and sponsors browse and back it.'],
   ['Does AI come up with the ideas?', 'No. People make every creative decision. The platform provides the shared workspace, planning tools and a network of resources.'],
   ['How can a sponsor help a project?', 'Express interest, offer in-kind support such as a venue, materials or mentoring, or keep a project on a watchlist. The creator decides whether to accept.'],
-  ['Is this real money?', 'No. This is a demo prototype. Funding, pledges and commissions are simulated.'],
+  ['Is this real money?', 'No. This is a demo prototype with no real payments. Funding, pledges and commissions are simulated.'],
 ]
+
+const HOW = [
+  ['1', 'Develop', 'Creators build the concept with their team, then map the skills, venues and funding still missing.'],
+  ['2', 'Get discovered', 'Projects that need support are listed here with exactly what is missing, so sponsors can see where they can help.'],
+  ['3', 'Make it happen', 'Sponsors offer funds, space, materials or mentoring. Creators accept, plan the work and track progress.'],
+]
+
+/** Staggers siblings by 55ms, as the motion rules ask. */
+const stagger = (i: number) => ({ ['--i' as string]: i }) as CSSProperties
 
 function useFilters() {
   const [q, setQ] = useState('')
@@ -49,26 +59,24 @@ export default function Home() {
 
   return (
     <>
+      {/* Hero: a 13:8 band. Copy takes the golden major (61.8%), the art the minor (38.2%) and rests on the lower edge. */}
       <section className="border-b border-cloth-200 bg-cloth-100">
-        <div className="mx-auto max-w-7xl px-5 py-16 md:py-24">
-          <div className="text-sm font-bold uppercase tracking-widest text-terra-500">Independent art, made possible</div>
-          <h1 className="mt-3 max-w-4xl text-5xl font-extrabold leading-[1.05] md:text-6xl">
-            Back the creative projects that need you.
-          </h1>
-          <p className="mt-5 max-w-2xl text-lg text-ink/70">
-            Artists, curators and cultural practitioners bring ideas to life here. Browse the projects looking for venues,
-            funding, skills and mentors — and help one get made.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <a href="#projects" className="btn-primary !px-6 !py-3 !text-base">
-              Browse projects <ArrowRight size={18} />
-            </a>
-            {!user && !sponsor && (
-              <>
-                <Link to="/register" className="btn-accent !px-6 !py-3 !text-base">Start a project</Link>
-                <Link to="/sponsor/register" className="btn-ghost !px-6 !py-3 !text-base">I'm a sponsor</Link>
-              </>
-            )}
+        <div className="mx-auto grid max-w-7xl gap-8 px-5 pt-16 lg:grid-cols-[61.8fr_38.2fr] lg:items-end lg:pt-24">
+          <div className="enter pb-4 lg:pb-24">
+            <div className="eyebrow-hero">Independent art, made possible</div>
+            <h1 className="display-xl mt-4 max-w-[16ch]">Back the creative projects that need you.</h1>
+            <p className="body-lg mt-5 max-w-xl text-ink/70">
+              Artists, curators and cultural practitioners bring ideas to life here. Browse the projects looking for venues,
+              funding, skills and mentors, and help one get made.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a href="#projects" className="btn-primary">Browse projects</a>
+              {!sponsor && <Link to={user ? '/my-projects' : '/register'} className="btn-accent">Start a project</Link>}
+              {!user && !sponsor && <Link to="/sponsor/register" className="btn-ghost">I'm a sponsor</Link>}
+            </div>
+          </div>
+          <div className="enter justify-self-start lg:justify-self-end" style={stagger(2)}>
+            <HeroMoss className="block h-auto w-48 lg:w-full lg:max-w-md" />
           </div>
         </div>
       </section>
@@ -80,28 +88,35 @@ export default function Home() {
             [listed.filter((p) => p.status === 'Seeking support').length, 'seeking support'],
             [root.sponsors.length, 'sponsors'],
             [secured, 'resources secured'],
-          ].map(([n, l]) => (
-            <div key={l as string}>
-              <div className="text-3xl font-extrabold">{n}</div>
-              <div className="text-sm text-ink/60">{l}</div>
+          ].map(([n, l], i) => (
+            <div key={l as string} className="enter" style={stagger(i)}>
+              <div className="data-lg">{n}</div>
+              <div className="text-sm leading-5 text-ink/70">{l}</div>
             </div>
           ))}
         </div>
       </section>
 
       <section id="projects" className="mx-auto max-w-7xl px-5 py-12">
-        <h2 className="text-3xl font-extrabold">Project directory</h2>
+        <h2 className="section-title">Project directory</h2>
         <div className="mt-6 grid gap-8 lg:grid-cols-[16rem_1fr]">
           <aside className="space-y-5">
             <div className="relative">
-              <Search size={16} className="absolute left-3 top-3 text-ink/40" />
-              <input className="input !pl-9" placeholder="Search projects" value={f.q} onChange={(e) => f.setQ(e.target.value)} />
+              <Search size={16} className="absolute left-3 top-3 text-ink/70" aria-hidden="true" />
+              <input className="input !pl-9" placeholder="Search projects" aria-label="Search projects" value={f.q} onChange={(e) => f.setQ(e.target.value)} />
             </div>
             <div>
               <div className="label">Status</div>
               <div className="flex flex-wrap gap-2 lg:flex-col lg:items-start">
                 {STATUS.map((s) => (
-                  <button key={s} onClick={() => f.setStatus(s)} className={`text-sm ${f.status === s ? 'font-bold underline' : 'text-ink/70'}`}>
+                  <button
+                    key={s}
+                    onClick={() => f.setStatus(s)}
+                    aria-pressed={f.status === s}
+                    className={`rounded text-sm transition-colors duration-150 ${
+                      f.status === s ? 'font-semibold text-ink underline decoration-terra-500 decoration-2 underline-offset-4' : 'text-ink/70 hover:text-ink'
+                    }`}
+                  >
                     {s}
                   </button>
                 ))}
@@ -113,6 +128,7 @@ export default function Home() {
                 <label key={t} className="flex items-center gap-2 py-0.5 text-sm">
                   <input
                     type="checkbox"
+                    className="accent-indigo2-600"
                     checked={f.needs.includes(t)}
                     onChange={(e) => f.setNeeds(e.target.checked ? [...f.needs, t] : f.needs.filter((x) => x !== t))}
                   />
@@ -126,7 +142,7 @@ export default function Home() {
               ['Stage', f.stage, f.setStage, uniq((p) => p.stage)],
             ].map(([label, val, set, opts]) => (
               <div key={label as string}>
-                <div className="label">{label as string}</div>
+                <label className="label">{label as string}</label>
                 <select className="input" value={val as string} onChange={(e) => (set as (v: string) => void)(e.target.value)}>
                   <option value="">Any</option>
                   {(opts as string[]).map((o) => <option key={o}>{o}</option>)}
@@ -136,12 +152,21 @@ export default function Home() {
           </aside>
 
           <div>
-            <div className="mb-3 text-sm text-ink/60">{dataReady ? `${results.length} project${results.length === 1 ? '' : 's'}` : 'Loading…'}</div>
-            {!dataReady ? null : results.length === 0 ? (
-              <div className="card text-sm text-ink/60">No projects match. Try clearing a filter.</div>
+            <div className="data-micro mb-3 text-ink/70">{dataReady ? `${results.length} project${results.length === 1 ? '' : 's'} listed` : 'Loading…'}</div>
+            {!dataReady ? (
+              <Loading />
+            ) : results.length === 0 ? (
+              <div className="card flex flex-col items-center py-10 text-center">
+                <MossCushion state="dormant" width={144} height={55} seed={5} />
+                <p className="mt-4 text-sm text-ink/70">No projects match. Try clearing a filter.</p>
+              </div>
             ) : (
               <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                {results.map((p) => <ProjectCard key={p.id} rec={p} />)}
+                {results.map((p, i) => (
+                  <div key={p.id} className="enter" style={stagger(Math.min(i, 8))}>
+                    <ProjectCard rec={p} />
+                  </div>
+                ))}
               </div>
             )}
           </div>
@@ -150,16 +175,13 @@ export default function Home() {
 
       <section className="border-y border-cloth-200 bg-cloth-100">
         <Page wide>
-          <h2 className="text-3xl font-extrabold">How it works</h2>
+          <h2 className="section-title">How it works</h2>
           <div className="mt-6 grid gap-4 md:grid-cols-3">
-            {[
-              ['1. Develop', 'Creators build the concept with their team, then map the skills, venues and funding still missing.'],
-              ['2. Get discovered', 'Projects that need support are listed here with exactly what is missing, so sponsors can see where they can help.'],
-              ['3. Make it happen', 'Sponsors offer funds, space, materials or mentoring. Creators accept, plan the work and track progress.'],
-            ].map(([t, d]) => (
-              <div key={t} className="card">
-                <div className="text-lg font-bold">{t}</div>
-                <p className="mt-2 text-sm text-ink/70">{d}</p>
+            {HOW.map(([n, t, d]) => (
+              <div key={n} className="card">
+                <div className="wide-md">{n}</div>
+                <div className="card-title mt-3">{t}</div>
+                <p className="mt-2 text-sm leading-5 text-ink/70">{d}</p>
               </div>
             ))}
           </div>
@@ -168,12 +190,12 @@ export default function Home() {
 
       <section>
         <Page>
-          <h2 className="text-3xl font-extrabold">Frequently asked questions</h2>
+          <h2 className="section-title">Frequently asked questions</h2>
           <div className="mt-6 divide-y divide-cloth-200 rounded-lg border border-cloth-200 bg-white">
             {FAQ.map(([q, a]) => (
               <details key={q} className="group p-4">
-                <summary className="cursor-pointer list-none text-base font-semibold">{q}</summary>
-                <p className="mt-2 text-sm text-ink/70">{a}</p>
+                <summary className="card-title cursor-pointer list-none rounded">{q}</summary>
+                <p className="mt-2 text-sm leading-5 text-ink/70">{a}</p>
               </details>
             ))}
           </div>

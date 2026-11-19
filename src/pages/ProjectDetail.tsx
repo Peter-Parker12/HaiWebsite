@@ -39,7 +39,7 @@ export default function ProjectDetail() {
   }, [dataReady, id, fromRoot])
 
   if (!dataReady) {
-    return <Page><p className="text-sm text-ink/50">Loading…</p></Page>
+    return <Page><p className="text-sm text-ink/70">Loading…</p></Page>
   }
   if (!rec) {
     return (
@@ -113,7 +113,7 @@ export default function ProjectDetail() {
 
   return (
     <Page>
-      <Link to="/" className="inline-flex items-center gap-1 text-sm text-ink/60 hover:underline">
+      <Link to="/" className="inline-flex items-center gap-1 text-sm text-ink/70 hover:underline">
         <ArrowLeft size={14} /> All projects
       </Link>
 
@@ -136,9 +136,9 @@ export default function ProjectDetail() {
               {rec.types.map((t) => (
                 <span key={t} className="rounded bg-cloth-100 px-2 py-0.5 text-xs font-semibold text-terra-600">{typeById(t)?.label ?? t}</span>
               ))}
-              <span className="text-sm text-ink/60">{rec.discipline} · {rec.location} · {rec.stage}</span>
+              <span className="text-sm text-ink/70">{rec.discipline} · {rec.location} · {rec.stage}</span>
             </div>
-            <h1 className="mt-2 text-4xl font-extrabold">{ws.project.title}</h1>
+            <h1 className="mt-2 section-title">{ws.project.title}</h1>
             <p className="mt-2 text-lg text-ink/70">{rec.oneLiner}</p>
             <div className="mt-3 flex flex-wrap gap-1">
               {rec.tags.map((t) => <span key={t} className="rounded bg-cloth-100 px-2 py-0.5 text-xs">{t}</span>)}
@@ -146,7 +146,7 @@ export default function ProjectDetail() {
           </div>
 
           <section className="card">
-            <h2 className="text-xl font-bold">About the project</h2>
+            <h2 className="heading">About the project</h2>
             {concept.map((c, i) => <p key={i} className="mt-2 text-sm text-ink/80">{c}</p>)}
             {ws.project.mood.length > 0 && (
               <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
@@ -162,11 +162,11 @@ export default function ProjectDetail() {
 
           {detailFields.length > 0 && (
             <section className="card">
-              <h2 className="text-xl font-bold">Project details</h2>
+              <h2 className="heading">Project details</h2>
               <dl className="mt-3 grid gap-x-6 gap-y-3 sm:grid-cols-2">
                 {detailFields.map((fld) => (
                   <div key={fld.key} className={fld.kind === 'longtext' ? 'sm:col-span-2' : ''}>
-                    <dt className="text-xs font-semibold uppercase tracking-wide text-ink/50">{fld.label}</dt>
+                    <dt className="text-xs font-semibold uppercase tracking-wide text-ink/70">{fld.label}</dt>
                     <dd className="mt-0.5 text-sm text-ink/80">{show(fld, rec.details[fld.key])}</dd>
                   </div>
                 ))}
@@ -175,13 +175,13 @@ export default function ProjectDetail() {
           )}
 
           <section className="card">
-            <h2 className="text-xl font-bold">What the project needs</h2>
+            <h2 className="heading">What the project needs</h2>
             <ul className="mt-3 divide-y divide-cloth-100">
               {ws.resources.map((r) => (
                 <li key={r.id} className="flex items-center justify-between py-2 text-sm">
                   <span>
                     <span className="font-medium">{r.name}</span>
-                    <span className="ml-2 text-xs text-ink/50">{NEED_LABEL[r.type]}</span>
+                    <span className="ml-2 text-xs text-ink/70">{NEED_LABEL[r.type]}</span>
                   </span>
                   <Chip>{r.status}</Chip>
                 </li>
@@ -190,13 +190,13 @@ export default function ProjectDetail() {
           </section>
 
           <section className="card">
-            <h2 className="text-xl font-bold">Team</h2>
+            <h2 className="heading">Team</h2>
             <ul className="mt-3 grid gap-2 sm:grid-cols-2">
               {ws.project.collaborators.map((c) => (
                 <li key={c.id} className="flex items-center justify-between rounded-lg border border-cloth-200 p-3 text-sm">
                   <span>
                     <span className="font-medium">{c.name}</span>
-                    <span className="block text-xs text-ink/50">{c.discipline}</span>
+                    <span className="block text-xs text-ink/70">{c.discipline}</span>
                   </span>
                   <Chip tone={c.role}>{c.role}</Chip>
                 </li>
@@ -206,10 +206,10 @@ export default function ProjectDetail() {
 
           {rec.updates.length > 0 && (
             <section className="card">
-              <h2 className="text-xl font-bold">Updates</h2>
+              <h2 className="heading">Updates</h2>
               <ul className="mt-3 space-y-2 text-sm">
                 {rec.updates.map((u, i) => (
-                  <li key={i}><span className="text-ink/40">{u.date}</span> · {u.text}</li>
+                  <li key={i}><span className="text-ink/70">{u.date}</span> · {u.text}</li>
                 ))}
               </ul>
             </section>
@@ -218,11 +218,11 @@ export default function ProjectDetail() {
 
         <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
           <div className="card">
-            <div className="text-xs font-semibold uppercase tracking-wide text-ink/50">Funding</div>
-            <div className="mt-1 text-3xl font-extrabold">{money(b.funded)}</div>
-            <div className="text-sm text-ink/60">of {money(b.total)} needed</div>
+            <div className="text-xs font-semibold uppercase tracking-wide text-ink/70">Funding</div>
+            <div className="mt-1 data-lg">{money(b.funded)}</div>
+            <div className="text-sm text-ink/70">of {money(b.total)} needed</div>
             <div className="mt-2"><ProgressBar value={b.funded} max={b.total} tone="bg-terra-500" /></div>
-            <div className="mt-3 text-xs text-ink/50">
+            <div className="mt-3 text-xs text-ink/70">
               Led by {rec.ownerName}. {open.length} open need{open.length === 1 ? '' : 's'}.
             </div>
           </div>
@@ -232,9 +232,9 @@ export default function ProjectDetail() {
             {isOwner ? (
               <Link to={`/my-projects/${rec.id}/overview`} className="btn-primary mt-3 w-full">Open workspace</Link>
             ) : rec.removed ? (
-              <p className="mt-2 text-sm text-ink/60">This project is not available.</p>
+              <p className="mt-2 text-sm text-ink/70">This project is not available.</p>
             ) : rec.status === 'Closed' ? (
-              <p className="mt-2 text-sm text-ink/60">This project is closed.</p>
+              <p className="mt-2 text-sm text-ink/70">This project is closed.</p>
             ) : !user && !sponsor ? (
               <div className="mt-3 space-y-2">
                 <Link to="/login" state={{ from: loc.pathname }} className="btn-primary w-full">Log in to help</Link>
@@ -267,7 +267,7 @@ export default function ProjectDetail() {
             )}
           </div>
           {!rec.removed && !isOwner && (user || sponsor) && (
-            <button className="flex items-center gap-1 text-xs text-ink/50 underline" onClick={() => { setErr(''); setMod('report') }}>
+            <button className="flex items-center gap-1 text-xs text-ink/70 underline" onClick={() => { setErr(''); setMod('report') }}>
               <Flag size={12} /> Report this project
             </button>
           )}
@@ -298,7 +298,7 @@ export default function ProjectDetail() {
               <label className="label">{mod === 'report' ? 'Details (optional)' : 'Reason shown to the project owner'}</label>
               <textarea className="input h-24" value={details} onChange={(e) => setDetails(e.target.value)} />
             </div>
-            {err && <p className="text-sm text-red-600">{err}</p>}
+            {err && <p className="text-sm text-red-700">{err}</p>}
             <button
               className={mod === 'remove' ? 'btn-accent w-full' : 'btn-primary w-full'}
               disabled={busy || (mod === 'report' ? !reason : details.trim().length < 5)}
@@ -326,7 +326,7 @@ export default function ProjectDetail() {
               <label className="label">Message to the creator</label>
               <textarea className="input h-28" value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Introduce yourself and what you can offer." />
             </div>
-            {err && <p className="text-sm text-red-600">{err}</p>}
+            {err && <p className="text-sm text-red-700">{err}</p>}
             <button className="btn-primary w-full" disabled={busy || !message.trim() || (modal === 'in-kind' && !resourceId)} onClick={() => void send()}>
               {busy ? 'Sending…' : 'Send request'}
             </button>

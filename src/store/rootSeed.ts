@@ -73,6 +73,13 @@ function users(): User[] {
     mk('u7', 'Amara Diallo', 'Artist', 'Public art', 'London', 'Participatory public artworks.'),
     mk('u8', 'Kofi Mensah', 'Artist', 'Sound art', 'Accra', 'Field recordist and sound artist.'),
     mk('u9', 'Lucia Ferraro', 'Artist', 'Documentary photography', 'Naples', 'Documentary photographer and filmmaker.'),
+    mk('u10', 'Matteo', 'Cultural practitioner', 'Festival production', 'Montenegro', 'Part of the team behind the Montenegro children\'s arts festival.'),
+    mk('u11', 'David A. Jimenez', 'Cultural practitioner', 'Software and provenance', 'Online', 'Building tools that help artists keep their work\'s history.'),
+    mk('u12', 'Orsi', 'Cultural practitioner', 'Restitution', 'Not specified', 'Working on a platform for restitution cases.'),
+    mk('u13', 'Aurelia', 'Curator', 'Art fairs', 'Undecided', 'Organising an alternative fair for emerging artists.'),
+    mk('u14', 'Leila', 'Cultural practitioner', 'Cultural consultancy', 'Not specified', 'Founding a cultural consultant agency.'),
+    mk('u15', 'Alice Verri', 'Cultural practitioner', 'Art placement', 'Lisbon', 'Connecting galleries with companies and public spaces.'),
+    mk('u16', 'Tanushree', 'Artist', 'Multimedia', 'Not specified', 'Co-producing public installations with communities.'),
   ]
 }
 
@@ -187,6 +194,13 @@ const TYPED: Record<string, { types: string[]; details: Record<string, unknown> 
     details: { dimensions: 'Ten kinetic sculptures, each about 2 m tall', materials: ['Recycled electronics', 'Motors', 'Salvaged wood'], siteRequirements: 'Indoor hall with power points.', installDays: 6 },
   },
   p19: { types: ['other'], details: {} },
+  p20: { types: ['festival'], details: {} },
+  p21: { types: ['other'], details: {} },
+  p22: { types: ['other'], details: {} },
+  p23: { types: ['exhibition'], details: {} },
+  p24: { types: ['other'], details: {} },
+  p25: { types: ['other'], details: {} },
+  p26: { types: ['public', 'installation'], details: {} },
 }
 
 function project(
@@ -227,6 +241,11 @@ function sample(opts: {
   const ws = emptyWorkspace(opts)
   ws.project.mood = (opts.mood ?? []).map(([title, note, color], i) => ({ id: `m${i + 1}`, title, note, color }))
   return ws
+}
+
+/** Team members from a list of names. The leader is added by emptyWorkspace; the rest join as collaborators. */
+function team(names: string[]): Collaborator[] {
+  return names.map((name, i) => ({ id: `c${i + 2}`, name, role: 'Collaborator', discipline: 'Team member' }))
 }
 
 export const rootSeed: Root = {
@@ -391,6 +410,83 @@ export const rootSeed: Root = {
         concept: 'Get the best replica luxury watches at unbeatable prices, ship worldwide, 90 percent off, no questions asked. Visit our website now and enter the discount code to get free shipping. Limited offer ends today so click the link in the description and buy now before the stock runs out. Contact us on the messaging app for bulk orders and resellers, payment accepted by gift card only. This is a demo of a project that moderators should remove.',
         owner: { name: 'Lucia Ferraro', discipline: 'Documentary photography' },
         resources: [['Advertising budget', 'Funding', 'Missing', 5000]],
+      }),
+    ),
+    project(
+      'p20', 'u10', 'Seeking support',
+      { oneLiner: 'Interdisciplinary festival spanning art, film and music for children in Montenegro.', discipline: 'Festival', location: 'Montenegro', stage: 'Concept', tags: ['Community', 'Heritage'] },
+      sample({
+        title: "Montenegro Children's Arts Festival", tagline: 'Interdisciplinary festival spanning art, film and music for children in Montenegro.',
+        concept: 'Interdisciplinary festival spanning art, film and music for children in Montenegro. The team is mapping what it still needs and is looking for partners.',
+        owner: { name: 'Matteo', discipline: 'Festival production' },
+        resources: [['Festival venue', 'Venue', 'Missing', 6000], ['Festival producer', 'Skill', 'Missing', 4000], ['Festival funding', 'Funding', 'Missing', 20000]],
+        team: team(['Dunja', 'Emily', 'Oluchi', 'Suwaiba']),
+      }),
+    ),
+    project(
+      'p21', 'u11', 'Seeking support',
+      { oneLiner: "Artist-centred provenance: helping artists preserve and reclaim their work's history, circulation and recognition.", discipline: 'Website / software', location: 'Online', stage: 'Concept', tags: ['Restitution', 'Provenance', 'CMS', 'Heritage'] },
+      sample({
+        title: 'Artist-Centred Provenance', tagline: "Artist-centred provenance: helping artists preserve and reclaim their work's history, circulation and recognition.",
+        concept: "Artist-centred provenance: helping artists preserve and reclaim their work's history, circulation and recognition. The team is mapping what it still needs and is looking for partners.",
+        owner: { name: 'David A. Jimenez', discipline: 'Software and provenance' },
+        resources: [['Software developer', 'Skill', 'Missing', 8000], ['Provenance researcher', 'Expertise', 'Missing', 3000], ['Development funding', 'Funding', 'Missing', 15000]],
+        team: team(['Felix Siegl', 'Seraphine Verstraete']),
+      }),
+    ),
+    project(
+      'p22', 'u12', 'Seeking support',
+      { oneLiner: 'A restitution platform combining all actors needed to conduct restitution cases in one place.', discipline: 'Website', location: 'Not specified', stage: 'Concept', tags: ['Restitution', 'Colonial objects'] },
+      sample({
+        title: 'Restitution Platform', tagline: 'A restitution platform combining all actors needed to conduct restitution cases in one place.',
+        concept: 'A restitution platform combining all actors needed to conduct restitution cases on one platform. The team is mapping what it still needs and is looking for partners.',
+        owner: { name: 'Orsi', discipline: 'Restitution' },
+        resources: [['Web developer', 'Skill', 'Missing', 7000], ['Legal adviser', 'Expertise', 'Missing', 3500], ['Platform funding', 'Funding', 'Missing', 14000]],
+        team: team(['Zeyneb', 'Hilary', 'Eleanor', 'Ahona']),
+      }),
+    ),
+    project(
+      'p23', 'u13', 'Seeking support',
+      { oneLiner: 'An alternative international art fair for young and emerging artists.', discipline: 'Art fair', location: 'Undecided', stage: 'Concept', tags: [] },
+      sample({
+        title: 'Alternative Art Fair', tagline: 'An alternative international art fair for young and emerging artists.',
+        concept: 'An alternative international art fair for young and emerging artists. The team is mapping what it still needs and is looking for partners.',
+        owner: { name: 'Aurelia', discipline: 'Art fairs' },
+        resources: [['Fair venue', 'Venue', 'Missing', 9000], ['Fair coordinator', 'Skill', 'Missing', 4500], ['Fair funding', 'Funding', 'Missing', 25000]],
+        team: team(['Esteban', 'Molly', 'Lili']),
+      }),
+    ),
+    project(
+      'p24', 'u14', 'Seeking support',
+      { oneLiner: 'A cultural consultant agency.', discipline: 'Consultant agency', location: 'Not specified', stage: 'Concept', tags: [] },
+      sample({
+        title: 'Cultural Consultant Agency', tagline: 'A cultural consultant agency.',
+        concept: 'A cultural consultant agency. The team is mapping what it still needs and is looking for partners.',
+        owner: { name: 'Leila', discipline: 'Cultural consultancy' },
+        resources: [['Business set-up adviser', 'Expertise', 'Missing', 2500], ['Shared office space', 'Venue', 'Missing', 3000], ['Start-up funding', 'Funding', 'Missing', 8000]],
+        team: team(['Emily', 'Sofiya', 'Claire']),
+      }),
+    ),
+    project(
+      'p25', 'u15', 'Seeking support',
+      { oneLiner: 'A Lisbon platform bringing art out of storage and into workplaces, schools, hospitals and care homes by subscription.', discipline: 'Art placement platform', location: 'Lisbon', stage: 'Concept', tags: [] },
+      sample({
+        title: 'Art Out of Storage', tagline: 'A Lisbon platform bringing art out of storage and into workplaces, schools, hospitals and care homes by subscription.',
+        concept: "We are a Lisbon-based platform that connects galleries with private companies and public spaces, bringing art out of storage and onto the walls of offices, hospitality venues, libraries, schools, hospitals and care homes through flexible subscriptions, with the option to buy. Companies' subscriptions and sponsorship fund both their own art programmes and public placements, giving galleries wider visibility, businesses a way to deliver on their CSR and employee wellbeing goals, and the public greater access to art.",
+        owner: { name: 'Alice Verri', discipline: 'Art placement' },
+        resources: [['Platform developer', 'Skill', 'Missing', 9000], ['Legal advice on subscriptions', 'Expertise', 'Missing', 3000], ['Launch funding', 'Funding', 'Missing', 18000]],
+        team: team(['Irene Gianti', 'Katie Procor']),
+      }),
+    ),
+    project(
+      'p26', 'u16', 'Seeking support',
+      { oneLiner: 'A multimedia studio connecting communities and activists with artists to coproduce politically engaging public installations.', discipline: 'Multimedia studio', location: 'Not specified', stage: 'Concept', tags: [] },
+      sample({
+        title: 'Coproduced Public Installations', tagline: 'A multimedia studio connecting communities and activists with artists to coproduce politically engaging public installations.',
+        concept: 'A multimedia studio connecting communities and activists with artists to coproduce politically engaging public installations. The team is mapping what it still needs and is looking for partners.',
+        owner: { name: 'Tanushree', discipline: 'Multimedia' },
+        resources: [['Production space', 'Venue', 'Missing', 5000], ['Fabricator', 'Skill', 'Missing', 4000], ['Production funding', 'Funding', 'Missing', 16000]],
+        team: team(['Lilli', 'Danil', 'Erleta']),
       }),
     ),
   ],

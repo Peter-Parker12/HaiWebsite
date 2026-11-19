@@ -1,4 +1,4 @@
-import { ArrowLeft, ArrowRight, Check, Compass, Plus, Trash2 } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Check, Plus, Trash2 } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { uid, useRoot } from '../store/store'
@@ -8,41 +8,30 @@ const ROLES: UserRole[] = ['Artist', 'Curator', 'Cultural practitioner', 'Organi
 const GOALS = ['Develop ideas', 'Find resources', 'Raise funds', 'License or share ideas', 'Offer my expertise']
 const STEPS = ['Account', 'About you', 'Portfolio']
 
+/** Auth screens: the stacked lockup over a white pane on cloth-100. */
 export function AuthShell({
   title,
   sub,
   children,
-  headline = 'From a creative idea to a project that can happen.',
-  blurb = 'Develop ideas together, find the resources you are missing, and turn concepts into real projects.',
 }: {
   title: string
   sub: string
   children: ReactNode
+  /** Accepted for older callers; the guideline sets the stacked lockup over the form instead. */
   headline?: string
   blurb?: string
 }) {
   return (
-    <div className="grid min-h-screen md:grid-cols-2">
-      <div className="hidden flex-col justify-between bg-cloth-100 p-10 md:flex">
-        <Link to="/" className="flex items-center gap-2 text-xl font-extrabold tracking-tight">
-          <Compass className="text-terra-500" size={24} /> ConceptBridge
-        </Link>
-        <div>
-          <h2 className="max-w-md text-4xl font-extrabold leading-tight">{headline}</h2>
-          <p className="mt-4 max-w-md text-ink/70">{blurb}</p>
-        </div>
-        <p className="text-xs text-ink/50">Demo only — accounts are stored in your browser, nothing is sent anywhere.</p>
+    <div className="flex min-h-screen flex-col items-center bg-cloth-100 px-5 py-10">
+      <Link to="/" aria-label="Terrarium home" className="mb-8 mt-4">
+        <img src="/brand/lockup-stacked.svg" alt="Terrarium" className="h-28 w-auto" />
+      </Link>
+      <div className="w-full max-w-md rounded-xl border border-cloth-200 bg-white p-6 sm:p-8">
+        <h1 className="page-title">{title}</h1>
+        <p className="mt-1 text-sm leading-5 text-ink/70">{sub}</p>
+        <div className="mt-6">{children}</div>
       </div>
-      <div className="flex items-center justify-center px-5 py-10">
-        <div className="w-full max-w-md">
-          <Link to="/" className="mb-6 flex items-center gap-2 text-lg font-extrabold md:hidden">
-            <Compass className="text-terra-500" size={22} /> ConceptBridge
-          </Link>
-          <h1 className="text-3xl font-extrabold">{title}</h1>
-          <p className="mt-1 text-sm text-ink/60">{sub}</p>
-          <div className="mt-6">{children}</div>
-        </div>
-      </div>
+      <p className="mt-6 text-xs text-ink/70">Terrarium · demo prototype · no real payments</p>
     </div>
   )
 }
@@ -96,7 +85,7 @@ export default function Register() {
     <AuthShell title="Create your account" sub="Free to start. Takes about a minute.">
       <ol className="mb-6 flex gap-2">
         {STEPS.map((s, i) => (
-          <li key={s} className={`flex-1 border-t-4 pt-2 text-xs font-semibold ${i <= step ? 'border-terra-500' : 'border-cloth-200 text-ink/40'}`}>
+          <li key={s} className={`flex-1 border-t-4 pt-2 text-xs font-semibold ${i <= step ? 'border-terra-500' : 'border-cloth-200 text-ink/70'}`}>
             {i + 1}. {s}
           </li>
         ))}
@@ -132,7 +121,7 @@ export default function Register() {
             <div>
               <label className="label">Password</label>
               <input className="input" type="password" value={pw} onChange={(e) => setPw(e.target.value)} autoComplete="new-password" />
-              <p className="mt-1 text-xs text-ink/50">At least 8 characters.</p>
+              <p className="mt-1 text-xs text-ink/70">At least 8 characters.</p>
             </div>
             <label className="flex items-start gap-2 text-sm">
               <input type="checkbox" className="mt-1" checked={agree} onChange={(e) => setAgree(e.target.checked)} />
@@ -182,7 +171,7 @@ export default function Register() {
                       type="button"
                       key={g}
                       onClick={() => set('goals', on ? u.goals.filter((x) => x !== g) : [...u.goals, g])}
-                      className={`rounded-full border px-3 py-1 text-sm ${on ? 'border-terra-500 bg-orange-50' : 'border-cloth-300'}`}
+                      className={`rounded-full border px-3 py-1 text-sm ${on ? 'border-terra-500 bg-orange-50' : 'border-ink/50'}`}
                     >
                       {g}
                     </button>
@@ -225,7 +214,7 @@ export default function Register() {
           </>
         )}
 
-        {err && <p className="text-sm text-red-600">{err}</p>}
+        {err && <p className="text-sm text-red-700">{err}</p>}
 
         <div className="flex gap-2">
           {step > 0 && (
@@ -242,7 +231,7 @@ export default function Register() {
       </p>
       {demo && (
         <button
-          className="mt-2 block w-full text-center text-sm text-ink/60 underline"
+          className="mt-2 block w-full text-center text-sm text-ink/70 underline"
           onClick={async () => {
             try {
               await demoLogin('user')

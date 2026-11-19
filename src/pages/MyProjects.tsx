@@ -35,7 +35,7 @@ export default function MyProjects() {
         }
       />
 
-      {!dataReady && <p className="text-sm text-ink/50">Loading…</p>}
+      {!dataReady && <p className="text-sm text-ink/70">Loading…</p>}
 
       {dataReady && mine.length === 0 && (
         <div className="card text-center">
@@ -54,11 +54,11 @@ export default function MyProjects() {
           const list = mine.filter((p) => p.status === g.status)
           return (
             <section key={g.status} className="mb-8">
-              <h2 className="mb-3 text-xl font-bold">
-                {g.title} <span className="text-sm font-normal text-ink/50">({list.length})</span>
+              <h2 className="mb-3 heading">
+                {g.title} <span className="text-sm font-normal text-ink/70">({list.length})</span>
               </h2>
               {list.length === 0 ? (
-                <p className="text-sm text-ink/50">{g.empty}</p>
+                <p className="text-sm text-ink/70">{g.empty}</p>
               ) : (
                 <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                   {list.map((p) => <ProjectCard key={p.id} rec={p} to={`/my-projects/${p.id}/overview`} />)}
@@ -108,7 +108,7 @@ export default function MyProjects() {
               </div>
             </div>
             <TypePicker value={f.types} onChange={(types) => setF({ ...f, types })} />
-            {err && <p className="text-sm text-red-600">{err}</p>}
+            {err && <p className="text-sm text-red-700">{err}</p>}
             <button className="btn-primary w-full" disabled={busy}>{busy ? 'Creating…' : 'Create project'}</button>
           </form>
         </Modal>

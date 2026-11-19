@@ -146,7 +146,7 @@ export default function Discover() {
 
       <div className="mt-4 grid gap-4 lg:grid-cols-3">
         <div className="space-y-3 lg:col-span-2">
-          {results.length === 0 && <div className="card text-sm text-ink/60">No matches. Try removing a filter.</div>}
+          {results.length === 0 && <div className="card text-sm text-ink/70">No matches. Try removing a filter.</div>}
           {results.map((e) => {
             const st = statusOf(e.id)
             return (
@@ -160,7 +160,7 @@ export default function Discover() {
                         e.name
                       )}
                     </button>
-                    <div className="text-xs text-ink/50">
+                    <div className="text-xs text-ink/70">
                       {e.kind} · {e.location} · {e.discipline}
                     </div>
                   </div>
@@ -189,9 +189,9 @@ export default function Discover() {
         </div>
 
         <div className="card h-fit">
-          <h2 className="text-lg font-semibold">Outreach tracker</h2>
+          <h2 className="card-title">Outreach tracker</h2>
           {state.outreach.length === 0 ? (
-            <p className="mt-2 text-sm text-ink/60">Saved profiles and proposals will appear here.</p>
+            <p className="mt-2 text-sm text-ink/70">Saved profiles and proposals will appear here.</p>
           ) : (
             <ul className="mt-3 space-y-3">
               {state.outreach.map((o) => {
@@ -203,11 +203,11 @@ export default function Discover() {
                       <span className="font-medium">{e?.name}</span>
                       <Chip>{o.status}</Chip>
                     </div>
-                    {r && <div className="text-xs text-ink/50">For: {r.name}</div>}
+                    {r && <div className="text-xs text-ink/70">For: {r.name}</div>}
                     {o.status === 'Requested' && (
                       <div className="mt-2 flex gap-2">
                         <button className="text-xs text-moss-700 hover:underline" onClick={() => respond(o.entryId, true)}>Simulate: accepted</button>
-                        <button className="text-xs text-ink/50 hover:underline" onClick={() => respond(o.entryId, false)}>Simulate: declined</button>
+                        <button className="text-xs text-ink/70 hover:underline" onClick={() => respond(o.entryId, false)}>Simulate: declined</button>
                       </div>
                     )}
                   </li>

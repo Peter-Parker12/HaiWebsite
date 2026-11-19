@@ -1,4 +1,4 @@
-import { Bell, Compass, LogOut } from 'lucide-react'
+import { Bell, LogOut } from 'lucide-react'
 import { useState } from 'react'
 import { Link, NavLink, Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useRoot } from '../store/store'
@@ -37,9 +37,9 @@ function Navbar() {
   return (
     <header className="sticky top-0 z-30 border-b border-cloth-200 bg-cloth-50/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-6 gap-y-2 px-5 py-3">
-        <Link to="/" className="flex items-center gap-2 text-xl font-extrabold tracking-tight">
-          <Compass className="text-terra-500" size={24} /> ConceptBridge
-          {kind === 'sponsor' && <span className="rounded bg-ink px-1.5 py-0.5 text-[10px] font-bold uppercase text-white">Sponsor</span>}
+        <Link to="/" className="flex items-center gap-2" aria-label="Terrarium home">
+          <img src="/brand/lockup-horizontal.svg" alt="Terrarium" className="h-8 w-auto" />
+          {kind === 'sponsor' && <span className="badge-label rounded bg-ink px-1.5 py-0.5 text-white">Sponsor</span>}
         </Link>
 
         <nav className="order-3 flex w-full gap-1 overflow-x-auto md:order-none md:w-auto md:flex-1">
@@ -49,7 +49,7 @@ function Navbar() {
               to={it.to}
               end={it.end}
               className={({ isActive }) =>
-                `whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-semibold ${isActive ? 'bg-ink text-white' : 'text-ink/70 hover:bg-cloth-100'}`
+                `whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-semibold transition-colors duration-150 ease-standard ${isActive ? 'bg-ink text-white' : 'text-ink/70 hover:bg-cloth-100'}`
               }
             >
               {it.text}
@@ -69,7 +69,7 @@ function Navbar() {
               <div className="relative">
                 <button className="btn-ghost relative !px-2 !py-1.5" aria-label="Notifications" onClick={() => setOpen((o) => !o)}>
                   <Bell size={16} />
-                  {unread > 0 && <span className="absolute -right-1 -top-1 rounded-full bg-terra-500 px-1.5 text-[10px] text-white">{unread}</span>}
+                  {unread > 0 && <span className="absolute -right-1 -top-1 rounded-full bg-terra-600 px-1.5 text-[10px] text-white">{unread}</span>}
                 </button>
                 {open && (
                   <div className="absolute right-0 top-11 z-40 w-80 rounded-xl border border-cloth-200 bg-white p-3 shadow-lg">
@@ -81,9 +81,9 @@ function Navbar() {
                     </div>
                     <ul className="max-h-72 space-y-2 overflow-y-auto">
                       {root.notices.slice(0, 15).map((n) => (
-                        <li key={n.id} className={`rounded-lg p-2 text-sm ${n.read ? 'text-ink/60' : 'bg-cloth-100'}`}>
+                        <li key={n.id} className={`rounded-lg p-2 text-sm ${n.read ? 'text-ink/70' : 'bg-cloth-100'}`}>
                           {n.link ? <Link to={n.link} onClick={() => setOpen(false)} className="hover:underline">{n.text}</Link> : n.text}
-                          <div className="text-xs text-ink/40">{n.date}</div>
+                          <div className="text-xs text-ink/70">{n.date}</div>
                         </li>
                       ))}
                     </ul>
@@ -116,15 +116,15 @@ export function Shell() {
       <div className="flex-1">
         <Outlet />
       </div>
-      <footer className="border-t border-cloth-200 py-8 text-center text-xs text-ink/50">
-        ConceptBridge · demo prototype · no real payments
+      <footer className="border-t border-cloth-200 py-8 text-center text-xs text-ink/70">
+        Terrarium · demo prototype · no real payments
       </footer>
     </div>
   )
 }
 
 function Loading() {
-  return <div className="py-24 text-center text-sm text-ink/50">Loading…</div>
+  return <div className="py-24 text-center text-sm text-ink/70">Loading…</div>
 }
 
 export function RequireUser() {

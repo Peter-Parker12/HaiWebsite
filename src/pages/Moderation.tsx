@@ -87,7 +87,7 @@ export default function Moderation() {
           <button key={k} className={tab === k ? 'btn-primary !py-1.5' : 'btn-ghost !py-1.5'} onClick={() => { setErr(''); setTab(k) }}>{label}</button>
         ))}
       </div>
-      {err && <p className="mb-3 text-sm text-red-600">{err}</p>}
+      {err && <p className="mb-3 text-sm text-red-700">{err}</p>}
 
       {tab === 'projects' && (
         <>
@@ -102,7 +102,7 @@ export default function Moderation() {
           </div>
           <div className="card overflow-x-auto !p-0">
             <table className="w-full text-left text-sm">
-              <thead className="border-b border-cloth-200 bg-cloth-100 text-xs uppercase tracking-wide text-ink/50">
+              <thead className="border-b border-cloth-200 bg-cloth-100 text-xs uppercase tracking-wide text-ink/70">
                 <tr>
                   <th className="px-4 py-3">Project</th>
                   <th className="px-4 py-3">Owner</th>
@@ -112,22 +112,22 @@ export default function Moderation() {
                 </tr>
               </thead>
               <tbody>
-                {rows.length === 0 && <tr><td colSpan={5} className="px-4 py-6 text-center text-ink/50">No projects match.</td></tr>}
+                {rows.length === 0 && <tr><td colSpan={5} className="px-4 py-6 text-center text-ink/70">No projects match.</td></tr>}
                 {rows.map((r) => (
                   <tr key={r.id} className="border-b border-cloth-100 last:border-0">
                     <td className="px-4 py-3">
                       <Link to={`/projects/${r.id}`} className="font-semibold hover:underline">{r.title}</Link>
-                      <div className="text-xs text-ink/50">{r.types.map((t) => typeById(t)?.label ?? t).join(' + ')}</div>
+                      <div className="text-xs text-ink/70">{r.types.map((t) => typeById(t)?.label ?? t).join(' + ')}</div>
                     </td>
-                    <td className="px-4 py-3">{r.ownerName}<div className="text-xs text-ink/50">{r.ownerEmail}</div></td>
+                    <td className="px-4 py-3">{r.ownerName}<div className="text-xs text-ink/70">{r.ownerEmail}</div></td>
                     <td className="px-4 py-3">
                       <div className="flex flex-wrap gap-1">
                         {r.removed ? <Chip tone="Declined">Removed</Chip> : r.listed ? <Chip tone="Done">Listed</Chip> : <Chip tone="To do">Draft</Chip>}
                         {r.openReports > 0 && <Chip tone="Missing">{r.openReports} report{r.openReports > 1 ? 's' : ''}</Chip>}
                       </div>
-                      {r.removed && r.removedReason && <div className="mt-1 max-w-xs text-xs text-ink/50">{r.removedReason}</div>}
+                      {r.removed && r.removedReason && <div className="mt-1 max-w-xs text-xs text-ink/70">{r.removedReason}</div>}
                     </td>
-                    <td className="px-4 py-3 text-ink/60">{r.updated}</td>
+                    <td className="px-4 py-3 text-ink/70">{r.updated}</td>
                     <td className="px-4 py-3 text-right">
                       <div className="flex justify-end gap-2">
                         {r.removed ? (
@@ -159,13 +159,13 @@ export default function Moderation() {
 
       {tab === 'reports' && (
         <div className="space-y-3">
-          {reports.length === 0 && <div className="card text-sm text-ink/60">No open reports.</div>}
+          {reports.length === 0 && <div className="card text-sm text-ink/70">No open reports.</div>}
           {reports.map((r) => (
             <div key={r.id} className="card">
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div>
                   <Link to={`/projects/${r.projectId}`} className="text-lg font-bold hover:underline">{r.title}</Link>
-                  <div className="text-xs text-ink/50">Reported by {r.reporter} · {r.date}</div>
+                  <div className="text-xs text-ink/70">Reported by {r.reporter} · {r.date}</div>
                 </div>
                 <Chip tone="Missing">{r.reason}</Chip>
               </div>
@@ -183,11 +183,11 @@ export default function Moderation() {
         <div className="card overflow-x-auto !p-0">
           <table className="w-full text-left text-sm">
             <tbody>
-              {log.length === 0 && <tr><td className="px-4 py-6 text-center text-ink/50">Nothing yet.</td></tr>}
+              {log.length === 0 && <tr><td className="px-4 py-6 text-center text-ink/70">Nothing yet.</td></tr>}
               {log.map((l) => (
                 <tr key={l.id} className="border-b border-cloth-100 last:border-0">
-                  <td className="px-4 py-3 text-ink/50">{l.at}</td>
-                  <td className="px-4 py-3"><strong>{l.actor}</strong> {l.action} <span className="font-medium">{l.title}</span>{l.reason && <span className="text-ink/60"> — {l.reason}</span>}</td>
+                  <td className="px-4 py-3 text-ink/70">{l.at}</td>
+                  <td className="px-4 py-3"><strong>{l.actor}</strong> {l.action} <span className="font-medium">{l.title}</span>{l.reason && <span className="text-ink/70"> — {l.reason}</span>}</td>
                 </tr>
               ))}
             </tbody>
@@ -198,11 +198,11 @@ export default function Moderation() {
       {tab === 'team' && isAdmin && (
         <div className="max-w-2xl space-y-4">
           <div className="card">
-            <h2 className="text-lg font-bold">Moderation team</h2>
+            <h2 className="card-title">Moderation team</h2>
             <ul className="mt-3 divide-y divide-cloth-100">
               {team.map((m) => (
                 <li key={m.id} className="flex items-center justify-between py-2 text-sm">
-                  <span>{m.name} <span className="text-xs text-ink/50">{m.email}</span></span>
+                  <span>{m.name} <span className="text-xs text-ink/70">{m.email}</span></span>
                   <span className="flex items-center gap-2">
                     <Chip tone={m.role === 'admin' ? 'Owner' : 'Editor'}>{m.role === 'admin' ? 'Admin' : 'Ops'}</Chip>
                     {m.role === 'ops' && <button className="text-xs underline" onClick={() => void act(() => api(`/staff/team/${m.id}`, { method: 'DELETE' }))}>Remove</button>}
@@ -233,7 +233,7 @@ export default function Moderation() {
           <div className="space-y-3">
             <p className="text-sm text-ink/70">The project is hidden from Home immediately and the owner is notified with your reason. You can restore it later.</p>
             <textarea className="input h-24" placeholder="Reason shown to the owner" value={reason} onChange={(e) => setReason(e.target.value)} />
-            {err && <p className="text-sm text-red-600">{err}</p>}
+            {err && <p className="text-sm text-red-700">{err}</p>}
             <button className="btn-accent w-full" disabled={busy || reason.trim().length < 5} onClick={() => void remove()}>Remove project</button>
           </div>
         </Modal>

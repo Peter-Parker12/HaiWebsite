@@ -119,13 +119,13 @@ export default function Activation() {
       </div>
 
       {!plan.generated ? (
-        <div className="card text-center text-sm text-ink/60">
+        <div className="card text-center text-sm text-ink/70">
           Press <strong>Generate plan</strong> to create the brief, tasks and timeline from the project data.
         </div>
       ) : (
         <>
           <div className="card">
-            <h2 className="text-lg font-semibold">Project brief</h2>
+            <h2 className="card-title">Project brief</h2>
             <div className="mt-3 grid gap-3 md:grid-cols-3">
               {(['objectives', 'audience', 'outcomes'] as const).map((k) => (
                 <div key={k}>
@@ -138,8 +138,8 @@ export default function Activation() {
 
           <div className="card mt-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold">Timeline</h2>
-              <span className="text-xs text-ink/50">24 weeks from {dateAt(0)}</span>
+              <h2 className="card-title">Timeline</h2>
+              <span className="text-xs text-ink/70">24 weeks from {dateAt(0)}</span>
             </div>
             <div className="mt-3 space-y-2">
               {plan.phases.map((p) => {
@@ -164,18 +164,18 @@ export default function Activation() {
 
           <div className="card mt-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold">Tasks</h2>
-              <span className="text-xs text-ink/50">{done}/{plan.tasks.length} done</span>
+              <h2 className="card-title">Tasks</h2>
+              <span className="text-xs text-ink/70">{done}/{plan.tasks.length} done</span>
             </div>
             <div className="mt-3 grid gap-3 md:grid-cols-3">
               {COLS.map((col) => (
                 <div key={col} className="rounded-lg bg-cloth-50 p-3">
-                  <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink/50">{col}</div>
+                  <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-ink/70">{col}</div>
                   <div className="space-y-2">
                     {plan.tasks.filter((t) => t.status === col).map((t) => (
                       <div key={t.id} className="rounded-lg border border-cloth-200 bg-white p-3 text-sm">
                         <div className="font-medium">{t.title}</div>
-                        <div className="mt-1 text-xs text-ink/50">
+                        <div className="mt-1 text-xs text-ink/70">
                           {plan.phases.find((p) => p.id === t.phaseId)?.name}
                         </div>
                         <div className="mt-2 flex items-center gap-2">
@@ -196,7 +196,7 @@ export default function Activation() {
           </div>
 
           <div className="card mt-4">
-            <h2 className="text-lg font-semibold">Budget and funding gap</h2>
+            <h2 className="card-title">Budget and funding gap</h2>
             <div className="mt-3 grid gap-6 md:grid-cols-2">
               <table className="w-full text-sm">
                 <tbody>
@@ -218,7 +218,7 @@ export default function Activation() {
                   <span className="font-semibold text-terra-600">Gap {money(b.gap)}</span>
                 </div>
                 <ProgressBar value={b.funded} max={b.total} tone="bg-moss-500" />
-                <p className="mt-3 text-xs text-ink/60">
+                <p className="mt-3 text-xs text-ink/70">
                   Costs come from Resource Mapping; funding comes from grants matched in Discover. Secure a grant there and this gap closes.
                 </p>
                 <Chip tone={b.gap === 0 ? 'Secured' : 'Partially funded'}>{b.gap === 0 ? 'Fully funded' : 'Funding gap open'}</Chip>

@@ -43,7 +43,7 @@ export default function Login() {
           <label className="label">Password</label>
           <input className="input" type="password" value={pw} onChange={(e) => setPw(e.target.value)} autoComplete="current-password" />
         </div>
-        {err && <p className="text-sm text-red-600">{err}</p>}
+        {err && <p className="text-sm text-red-700">{err}</p>}
         <button className="btn-primary w-full !py-3" disabled={busy}>{busy ? 'Logging in…' : 'Log in'}</button>
       </form>
       <p className="mt-6 text-center text-sm text-ink/70">
@@ -51,7 +51,7 @@ export default function Login() {
         <Link to="/sponsor/login" className="font-semibold underline">Sponsor login</Link>
       </p>
       {demo && (
-        <button className="mt-2 block w-full text-center text-sm text-ink/60 underline" disabled={busy} onClick={() => void run(() => demoLogin('user'))}>
+        <button className="mt-2 block w-full text-center text-sm text-ink/70 underline" disabled={busy} onClick={() => void run(() => demoLogin('user'))}>
           Continue with a demo account
         </button>
       )}

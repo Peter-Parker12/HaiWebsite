@@ -15,7 +15,7 @@ function FieldInput({ fld, value, onChange }: { fld: FieldDef; value: unknown; o
     <label className="label">
       {fld.label}
       {fld.unit ? ` (${fld.unit})` : ''}
-      {fld.required && <span className="text-terra-500"> *</span>}
+      {fld.required && <span className="text-terra-600"> *</span>}
     </label>
   )
   const str = value === undefined || value === null ? '' : String(value)
@@ -25,7 +25,7 @@ function FieldInput({ fld, value, onChange }: { fld: FieldDef; value: unknown; o
         <div className="sm:col-span-2">
           {label}
           <textarea className="input h-24" value={str} onChange={(e) => onChange(e.target.value)} />
-          {fld.hint && <p className="mt-1 text-xs text-ink/50">{fld.hint}</p>}
+          {fld.hint && <p className="mt-1 text-xs text-ink/70">{fld.hint}</p>}
         </div>
       )
     case 'number':
@@ -62,7 +62,7 @@ function FieldInput({ fld, value, onChange }: { fld: FieldDef; value: unknown; o
         <div>
           {label}
           <input className="input" value={str} onChange={(e) => onChange(e.target.value)} />
-          {fld.hint && <p className="mt-1 text-xs text-ink/50">{fld.hint}</p>}
+          {fld.hint && <p className="mt-1 text-xs text-ink/70">{fld.hint}</p>}
         </div>
       )
   }
@@ -150,28 +150,28 @@ export default function Overview() {
       )}
       <div className="grid gap-4 lg:grid-cols-3">
         <div className="card lg:col-span-2">
-          <h2 className="text-lg font-bold">Public listing</h2>
-          <p className="text-sm text-ink/60">This is what sponsors see on Home and on your project page.</p>
+          <h2 className="card-title">Public listing</h2>
+          <p className="text-sm text-ink/70">This is what sponsors see on Home and on your project page.</p>
 
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             <div className="sm:col-span-2">
               <TypePicker value={draft.types} onChange={(types) => setDraft({ ...draft, types })} />
             </div>
             <div className="sm:col-span-2">
-              <label className="label">One-line pitch <span className="text-terra-500">*</span></label>
+              <label className="label">One-line pitch <span className="text-terra-600">*</span></label>
               <input className="input" maxLength={140} value={draft.oneLiner} onChange={(e) => setDraft({ ...draft, oneLiner: e.target.value })} />
-              <p className="mt-1 text-xs text-ink/50">{draft.oneLiner.length}/140</p>
+              <p className="mt-1 text-xs text-ink/70">{draft.oneLiner.length}/140</p>
             </div>
             <div>
-              <label className="label">Discipline <span className="text-terra-500">*</span></label>
+              <label className="label">Discipline <span className="text-terra-600">*</span></label>
               <input className="input" value={draft.discipline} onChange={(e) => setDraft({ ...draft, discipline: e.target.value })} />
             </div>
             <div>
-              <label className="label">Location <span className="text-terra-500">*</span></label>
+              <label className="label">Location <span className="text-terra-600">*</span></label>
               <input className="input" value={draft.location} onChange={(e) => setDraft({ ...draft, location: e.target.value })} />
             </div>
             <div>
-              <label className="label">Stage <span className="text-terra-500">*</span></label>
+              <label className="label">Stage <span className="text-terra-600">*</span></label>
               <select className="input" value={draft.stage} onChange={(e) => setDraft({ ...draft, stage: e.target.value })}>
                 {STAGES.map((s) => <option key={s}>{s}</option>)}
               </select>
@@ -184,8 +184,8 @@ export default function Overview() {
 
           {fields.length > 0 && (
             <>
-              <h3 className="mt-6 text-base font-bold">Details for this type of project</h3>
-              <p className="text-xs text-ink/50">Shown to everyone on the project page. * is needed before you can list the project.</p>
+              <h3 className="mt-6 card-title">Details for this type of project</h3>
+              <p className="text-xs text-ink/70">Shown to everyone on the project page. * is needed before you can list the project.</p>
               <div className="mt-3 grid gap-3 sm:grid-cols-2">
                 {fields.map((fld) => (
                   <FieldInput
@@ -209,9 +209,9 @@ export default function Overview() {
             </button>
             {msg && <span className="text-sm text-moss-700">{msg}</span>}
           </div>
-          {err && <p className="mt-2 text-sm text-red-600">{err}</p>}
+          {err && <p className="mt-2 text-sm text-red-700">{err}</p>}
           {serverMissing.length > 0 && (
-            <ul className="mt-1 list-disc pl-5 text-sm text-red-600">
+            <ul className="mt-1 list-disc pl-5 text-sm text-red-700">
               {serverMissing.map((m) => <li key={m.key}>{m.label}</li>)}
             </ul>
           )}
@@ -219,7 +219,7 @@ export default function Overview() {
 
         <div className="space-y-4">
           <div className="card">
-            <h2 className="text-lg font-bold">Status and visibility</h2>
+            <h2 className="card-title">Status and visibility</h2>
             <label className="label mt-3">Status</label>
             <select
               className="input"
@@ -239,11 +239,11 @@ export default function Overview() {
                 <p className="mt-2 text-xs text-moss-700">Everything needed is filled in.</p>
               ) : (
                 <div className="mt-2">
-                  <p className="text-xs text-ink/60">Still needed to list ({missing.length}):</p>
+                  <p className="text-xs text-ink/70">Still needed to list ({missing.length}):</p>
                   <ul className="mt-1 list-disc pl-5 text-xs text-ink/70">
                     {missing.map((m) => <li key={m.key}>{m.label}</li>)}
                   </ul>
-                  <p className="mt-2 text-xs text-ink/50">
+                  <p className="mt-2 text-xs text-ink/70">
                     The story is the concept text in <Link to={pp('idea-lab')} className="underline">Idea Lab</Link>.
                   </p>
                 </div>
@@ -259,22 +259,22 @@ export default function Overview() {
           </div>
 
           <div className="card">
-            <div className="text-xs uppercase tracking-wide text-ink/50">Resources secured</div>
-            <div className="mt-1 text-3xl font-extrabold">{secured}/{resources.length}</div>
+            <div className="text-xs uppercase tracking-wide text-ink/70">Resources secured</div>
+            <div className="mt-1 data-lg">{secured}/{resources.length}</div>
             <ProgressBar value={secured} max={resources.length} />
           </div>
           <div className="card">
-            <div className="text-xs uppercase tracking-wide text-ink/50">Funding gap</div>
-            <div className="mt-1 text-3xl font-extrabold">{money(b.gap)}</div>
+            <div className="text-xs uppercase tracking-wide text-ink/70">Funding gap</div>
+            <div className="mt-1 data-lg">{money(b.gap)}</div>
             <ProgressBar value={b.funded} max={b.total} tone="bg-terra-500" />
           </div>
         </div>
       </div>
 
       <div className="card">
-        <h2 className="text-lg font-bold">Support requests</h2>
+        <h2 className="card-title">Support requests</h2>
         {inbox.length === 0 ? (
-          <p className="mt-2 text-sm text-ink/60">No requests yet. Once your project is listed, sponsors can reach out here.</p>
+          <p className="mt-2 text-sm text-ink/70">No requests yet. Once your project is listed, sponsors can reach out here.</p>
         ) : (
           <ul className="mt-3 space-y-3">
             {inbox.map((s) => {
@@ -284,7 +284,7 @@ export default function Overview() {
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div>
                       <span className="font-semibold">{s.byName ?? 'Supporter'}</span>
-                      <span className="ml-2 text-xs text-ink/50">
+                      <span className="ml-2 text-xs text-ink/70">
                         {s.byKind === 'sponsor' ? 'Sponsor' : 'Creator'} · {s.kind === 'in-kind' ? `in-kind${res ? `: ${res.name}` : ''}` : 'interest'} · {s.date}
                       </span>
                     </div>
@@ -308,7 +308,7 @@ export default function Overview() {
         {steps.map((s) => (
           <Link key={s.label} to={s.to} className="card hover:border-terra-400">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-widest text-ink/50">{s.label}</span>
+              <span className="text-xs font-semibold uppercase tracking-widest text-ink/70">{s.label}</span>
               <Chip tone={s.done ? 'Done' : 'In progress'}>{s.done ? 'Done' : 'In progress'}</Chip>
             </div>
             <div className="mt-2 text-sm">{s.text}</div>

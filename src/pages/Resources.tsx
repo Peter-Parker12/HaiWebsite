@@ -1,5 +1,6 @@
 import { Search } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { CarpetEdge } from '../components/Moss'
 import { Chip, PageHeader } from '../components/ui'
 import { budgetOf, money, useStore, useProjectPath } from '../store/store'
 import type { ResStatus } from '../store/types'
@@ -21,24 +22,31 @@ export default function Resources() {
         desc="Skills, budget, venues, partners and expertise needed to move from concept to implementation."
       />
 
+      <div className="mb-4">
+        <CarpetEdge share={resources.length ? resources.filter((r) => r.status === 'Secured').length / resources.length : 0} className="h-2.5 w-full" />
+        <div className="data-micro mt-1 text-ink/70">
+          {resources.filter((r) => r.status === 'Secured').length} of {resources.length} resources secured
+        </div>
+      </div>
+
       <div className="mb-4 grid gap-4 md:grid-cols-3">
         <div className="card">
-          <div className="text-xs uppercase tracking-wide text-ink/50">Open gaps</div>
-          <div className="mt-1 text-3xl font-semibold">{gaps}</div>
+          <div className="text-xs uppercase tracking-wide text-ink/70">Open gaps</div>
+          <div className="mt-1 data-lg">{gaps}</div>
         </div>
         <div className="card">
-          <div className="text-xs uppercase tracking-wide text-ink/50">Estimated budget</div>
-          <div className="mt-1 text-3xl font-semibold">{money(b.total)}</div>
+          <div className="text-xs uppercase tracking-wide text-ink/70">Estimated budget</div>
+          <div className="mt-1 data-lg">{money(b.total)}</div>
         </div>
         <div className="card">
-          <div className="text-xs uppercase tracking-wide text-ink/50">Funding gap</div>
-          <div className="mt-1 text-3xl font-semibold text-terra-600">{money(b.gap)}</div>
+          <div className="text-xs uppercase tracking-wide text-ink/70">Funding gap</div>
+          <div className="mt-1 data-lg text-terra-600">{money(b.gap)}</div>
         </div>
       </div>
 
       <div className="card overflow-x-auto !p-0">
         <table className="w-full text-left text-sm">
-          <thead className="border-b border-cloth-200 bg-cloth-50 text-xs uppercase tracking-wide text-ink/50">
+          <thead className="border-b border-cloth-200 bg-cloth-50 text-xs uppercase tracking-wide text-ink/70">
             <tr>
               <th className="px-4 py-3">Resource</th>
               <th className="px-4 py-3">Type</th>
@@ -54,7 +62,7 @@ export default function Resources() {
               return (
                 <tr key={r.id} className="border-b border-cloth-100 last:border-0">
                   <td className="px-4 py-3 font-medium">{r.name}</td>
-                  <td className="px-4 py-3 text-ink/60">{r.type}</td>
+                  <td className="px-4 py-3 text-ink/70">{r.type}</td>
                   <td className="px-4 py-3">
                     <select
                       className="rounded-full border-0 bg-transparent text-xs font-medium"
@@ -75,7 +83,7 @@ export default function Resources() {
                   <td className="px-4 py-3">
                     {r.type === 'Funding' ? `${money(r.funded)} of ${money(r.budget)}` : money(r.budget)}
                   </td>
-                  <td className="px-4 py-3 text-xs text-ink/60">
+                  <td className="px-4 py-3 text-xs text-ink/70">
                     {linked.length === 0
                       ? '—'
                       : linked.map((o) => (
@@ -97,7 +105,7 @@ export default function Resources() {
           </tbody>
         </table>
       </div>
-      <p className="mt-3 text-xs text-ink/50">
+      <p className="mt-3 text-xs text-ink/70">
         This list feeds Discover & Match and the budget in Project Activation — nothing needs to be re-entered.
       </p>
     </>
