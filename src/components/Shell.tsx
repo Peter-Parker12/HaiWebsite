@@ -2,6 +2,7 @@ import { Bell, LogOut } from 'lucide-react'
 import { useState } from 'react'
 import { Link, NavLink, Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useRoot } from '../store/store'
+import { RouteFade } from './ui'
 
 type NavItem = { to: string; text: string; end?: boolean }
 
@@ -110,11 +111,16 @@ function Navbar() {
 }
 
 export function Shell() {
+  const { pathname } = useLocation()
+  // Workspace tabs share one key, so only a change of page (not of tab) re-runs the entrance.
+  const pageKey = pathname.split('/').slice(0, 3).join('/')
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
       <div className="flex-1">
-        <Outlet />
+        <RouteFade k={pageKey}>
+          <Outlet />
+        </RouteFade>
       </div>
       <footer className="border-t border-cloth-200 py-8 text-center text-xs text-ink/70">
         Terrarium · demo prototype · no real payments

@@ -193,7 +193,15 @@ const TYPED: Record<string, { types: string[]; details: Record<string, unknown> 
     types: ['installation'],
     details: { dimensions: 'Ten kinetic sculptures, each about 2 m tall', materials: ['Recycled electronics', 'Motors', 'Salvaged wood'], siteRequirements: 'Indoor hall with power points.', installDays: 6 },
   },
-  p19: { types: ['other'], details: {} },
+  p19: {
+    types: ['exhibition'],
+    details: {
+      curatorialStatement: 'A small exhibition about time, repair and care, told through the people who make and mend watches.',
+      runDates: 'Autumn 2027',
+      venueRequirement: 'Gallery of about 120 m² with display cases',
+      artistCount: 6,
+    },
+  },
   p20: { types: ['festival'], details: {} },
   p21: { types: ['other'], details: {} },
   p22: { types: ['other'], details: {} },
@@ -403,13 +411,13 @@ export const rootSeed: Root = {
     ),
     project(
       'p19', 'u9', 'Seeking support',
-      { oneLiner: 'BUY CHEAP LUXURY WATCHES ONLINE!!! LIMITED OFFER CLICK NOW', discipline: 'Retail', location: 'Online', stage: 'Concept', tags: ['sale', 'discount'] },
+      { oneLiner: 'An exhibition tracing how hand-made watches are designed, repaired and collected.', discipline: 'Exhibition', location: 'Naples', stage: 'Concept', tags: ['Craft', 'Design', 'Heritage'] },
       sample({
-        title: 'Cheap Luxury Watches Gallery Sale',
-        tagline: 'BUY CHEAP LUXURY WATCHES ONLINE!!! LIMITED OFFER CLICK NOW',
-        concept: 'Get the best replica luxury watches at unbeatable prices, ship worldwide, 90 percent off, no questions asked. Visit our website now and enter the discount code to get free shipping. Limited offer ends today so click the link in the description and buy now before the stock runs out. Contact us on the messaging app for bulk orders and resellers, payment accepted by gift card only. This is a demo of a project that moderators should remove.',
+        title: 'Watches Gallery', tagline: 'An exhibition tracing how hand-made watches are designed, repaired and collected.',
+        concept: 'Watches Gallery is a small exhibition about the craft behind the wristwatch. Local watchmakers and repairers open their benches to visitors, showing how movements are designed, assembled and mended by hand. Alongside the tools and unfinished pieces, collectors lend watches with a story, and visitors can bring their own for a conversation with a repairer. The show looks at time, repair and care, and leaves a record of the trade for the city.',
         owner: { name: 'Lucia Ferraro', discipline: 'Documentary photography' },
-        resources: [['Advertising budget', 'Funding', 'Missing', 5000]],
+        resources: [['Gallery space', 'Venue', 'Missing', 5000], ['Master watchmaker', 'Expertise', 'Missing', 2500], ['Exhibition funding', 'Funding', 'Missing', 9000]],
+        mood: [['Workbench', 'Brass tools under a desk lamp', '#b98a5e'], ['Movement', 'Gears and jewels, close up', '#8a8f98']],
       }),
     ),
     project(

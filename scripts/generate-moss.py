@@ -3,7 +3,7 @@
 Generates the Terrarium moss illustration set (public/brand/moss/*.svg).
 
 Rules from the brand guideline (09 · Moss, 10 · Golden grid):
-  - Moss is dots on a base line: moss-500 body, moss-700 shading, moss-300 new growth.
+  - Moss is drawn as curved shoots with halftone shading: moss-500 body, moss-700 shading, moss-300 new growth.
   - Frames are Fibonacci sizes (8, 13, 21, 34, 55, 89, 144, 233, 377). No gradients, no cartoon moss.
   - The files draw the Growing and Secured states. Open and Dormant are made in code by recolouring.
   - Each element has a cloth version and a -dark version for ink grounds.
@@ -49,54 +49,113 @@ def baseline(w, h, p, x1=0, x2=None):
 
 
 def cushion(p, secured, seed):
+    """A mound of moss: hundreds of curved shoots fanning outward, halftone shading on the shadow side."""
     w, h = 144, 89
-    n = 260 if secured else 150  # dense enough to read as a mound, not scattered dots
     r = rng(seed)
-    parts = [baseline(w, h, p)]
-    for _ in range(n):
-        a = math.pi * (0.04 + 0.92 * r())
+    cx, rx, ry, base = w / 2, w / 2 - 3, h - 5, h - 1
+    n_pts = 56
+    pts = []
+    for i in range(n_pts + 1):
+        a = math.pi - math.pi * i / n_pts
+        wob = 1 + (r() - 0.5) * 0.07
+        pts.append(('M' if i == 0 else 'L') + f'{f(cx + math.cos(a) * rx * wob)} {f(base - math.sin(a) * ry * wob)}')
+    silhouette = ' '.join(pts) + ' Z'
+
+    shoots = []
+    count = round((0.036 if secured else 0.022) * w * h)
+    for _ in range(count):
+        a = math.pi * (0.03 + 0.94 * r())
         d = math.sqrt(r())
-        x = w / 2 + math.cos(a) * d * (w / 2 - 6)
-        y = h - 2 - math.sin(a) * d * (h - 8)
-        lift = 1 - (h - y) / h
-        rad = 1.5 + r() * 1.8
-        if secured and lift > 0.7 and r() > 0.4:
-            fill = p['tip']
-        else:
-            fill = p['body'] if r() > 0.5 else p['shade']
-        parts.append(f'<circle cx="{f(x)}" cy="{f(y)}" r="{f(rad)}" fill="{fill}"/>')
-    name = 'Secured moss cushion' if secured else 'Growing moss cushion'
-    return svg(w, h, name, ''.join(parts))
+        x = cx + math.cos(a) * d * rx * 0.97
+        y = base - math.sin(a) * d * ry * 0.97
+        lift = max(0.0, min(1.0, (base - y) / ry))
+        out = math.atan2(y - (base + ry * 0.5), x - cx) + (r() - 0.5) * 0.7
+        length = 4 + r() * 5
+        tx = x + math.cos(out) * length
+        ty = min(y + math.sin(out) * length, base - 0.5)
+        bend = (r() - 0.5) * length * 0.6
+        mx = (x + tx) / 2 - math.sin(out) * bend
+        my = (y + ty) / 2 + math.cos(out) * bend
+        fresh = secured and lift > 0.66 and r() > 0.32
+        col = p['tip'] if fresh else (p['body'] if r() > 0.5 else p['shade'])
+        sw = 0.8 + r() * 0.7
+        el = f'<path d="M{f(x)} {f(y)} Q{f(mx)} {f(my)} {f(tx)} {f(ty)}" stroke="{col}" stroke-width="{f(sw)}" fill="none" stroke-linecap="round"/>'
+        if fresh:
+            el += f'<circle cx="{f(tx)}" cy="{f(ty)}" r="{f(0.7 + r() * 0.6)}" fill="{col}"/>'
+        shoots.append((y, el))
+    shoots.sort(key=lambda t: t[0])  # upper shoots first, so lower ones overlap them
+
+    dots = []
+    sp = 4.2
+    gy = sp / 2
+    while gy < base:
+        gx = sp / 2
+        while gx < w:
+            ex, ey = (gx - cx) / rx, (base - gy) / ry
+            if ex * ex + ey * ey <= 0.9:
+                t = 0.6 * (gx / w) + 0.4 * (gy / base)
+                if t >= 0.52:
+                    rad = min(1.5, (t - 0.5) * 3.4)
+                    if rad > 0.35:
+                        dots.append(f'<circle cx="{f(gx)}" cy="{f(gy)}" r="{f(rad)}"/>')
+            gx += sp
+        gy += sp
+
+    body = (
+        baseline(w, h, p)
+        + f'<path d="{silhouette}" fill="{p["shade"]}" opacity="0.9"/>'
+        + ''.join(el for _, el in shoots)
+        + f'<g fill="{p["shade"]}" opacity="0.5">' + ''.join(dots) + '</g>'
+        + f'<path d="{silhouette}" fill="none" stroke="{p["shade"]}" stroke-opacity="0.55" stroke-width="0.8" stroke-dasharray="6 2 1 2" stroke-linecap="round"/>'
+    )
+    return svg(w, h, 'Secured moss cushion' if secured else 'Growing moss cushion', body)
 
 
 def sporophyte(p, seed):
+    """A slender curved seta topped with a capsule and a pale cap, rising from a small tuft."""
     w, h = 21, 55
     r = rng(seed)
     parts = [baseline(w, h, p, 0, w)]
-    parts.append(f'<path d="M10.5 54 C10.5 40 11.5 26 10.5 14" fill="none" stroke="{p["body"]}" stroke-width="1.4" stroke-linecap="round"/>')
-    parts.append(f'<ellipse cx="10.5" cy="9" rx="3.6" ry="5.4" fill="{p["shade"]}"/>')
-    parts.append(f'<circle cx="11.4" cy="7" r="1.2" fill="{p["tip"]}"/>')
-    for _ in range(9):  # a small cushion at the foot
-        x = 10.5 + (r() - 0.5) * 17
-        y = 53 - r() * 6 * (1 - abs(x - 10.5) / 10)
-        parts.append(f'<circle cx="{f(x)}" cy="{f(y)}" r="{f(1.4 + r() * 1.4)}" fill="{p["body"] if r() > 0.4 else p["shade"]}"/>')
+    for i in range(9):  # tuft at the foot
+        x = 10.5 + (i - 4) * 1.7 + (r() - 0.5)
+        lean = (i - 4) * 0.9
+        col = p['body'] if i % 2 else p['shade']
+        parts.append(f'<path d="M{f(x)} {h - 1} Q{f(x + lean * 0.4)} {h - 4} {f(x + lean)} {f(h - 6 - r() * 2)}" stroke="{col}" stroke-width="1" fill="none" stroke-linecap="round"/>')
+    x, y, ht, lean = 10.5, h - 3, h - 17, 2.5
+    tx, ty = x + lean, y - ht
+    parts.append(
+        f'<path d="M{f(x)} {f(y)} C{f(x + lean * 0.1)} {f(y - ht * 0.45)} {f(x + lean * 0.95)} {f(y - ht * 0.65)} {f(tx)} {f(ty)}" '
+        f'fill="none" stroke="{p["body"]}" stroke-width="1.4" stroke-linecap="round"/>'
+    )
+    tilt = math.degrees(math.atan2(lean, ht))
+    parts.append(
+        f'<g transform="rotate({f(tilt)} {f(tx)} {f(ty)})">'
+        f'<ellipse cx="{f(tx)}" cy="{f(ty - 4.6)}" rx="3" ry="5" fill="{p["shade"]}"/>'
+        f'<path d="M{f(tx - 1.6)} {f(ty - 7.4)} Q{f(tx - 2.5)} {f(ty - 4.6)} {f(tx - 1.6)} {f(ty - 1.8)}" stroke="{p["tip"]}" stroke-width="0.8" fill="none" stroke-linecap="round"/>'
+        f'<ellipse cx="{f(tx)}" cy="{f(ty - 9.2)}" rx="2.1" ry="1.5" fill="{p["tip"]}"/>'
+        f'</g>'
+    )
     return svg(w, h, 'Sporophyte', ''.join(parts))
 
 
 def carpet_edge(p, seed):
+    """A strip of short shoots growing along a base line, in patches."""
     w, h = 377, 34
     r = rng(seed)
     parts = [baseline(w, h, p)]
     x = 4.0
     while x < w - 3:
-        # A slow wave makes the edge grow in patches instead of a flat strip.
         env = 0.45 + 0.55 * (0.5 + 0.5 * math.sin(x / 41.0 + seed)) * (0.7 + 0.3 * r())
         for _ in range(3):
-            y = h - 2 - r() * (h - 8) * env
-            lift = 1 - (h - y) / h
-            rad = 1.6 + r() * 2.0
-            fill = p['tip'] if lift > 0.62 and r() > 0.55 else (p['body'] if r() > 0.45 else p['shade'])
-            parts.append(f'<circle cx="{f(x + r() * 5)}" cy="{f(y)}" r="{f(rad)}" fill="{fill}"/>')
+            sx = x + r() * 5
+            ht = (4 + r() * (h - 12)) * env + 3
+            lean = (r() - 0.5) * 4
+            lift = ht / (h - 6)
+            col = p['tip'] if lift > 0.62 and r() > 0.55 else (p['body'] if r() > 0.45 else p['shade'])
+            parts.append(
+                f'<path d="M{f(sx)} {h - 1} Q{f(sx + lean)} {f(h - 1 - ht / 2)} {f(sx + lean * 1.5)} {f(h - 1 - ht)}" '
+                f'stroke="{col}" stroke-width="{f(1 + r() * 0.6)}" fill="none" stroke-linecap="round"/>'
+            )
         x += 5.0
     return svg(w, h, 'Carpet edge', ''.join(parts))
 
@@ -164,7 +223,7 @@ for suffix, pal in (('', LIGHT), ('-dark', DARK)):
 with open(os.path.join(OUT, 'README.txt'), 'w') as fh:
     fh.write(
         'Terrarium moss illustrations\n'
-        'Dots on a base line: moss-500 body, moss-700 shading, moss-300 new growth. Fibonacci frames.\n\n'
+        'Curved shoots on a base line: moss-500 body, moss-700 shading, moss-300 new growth, halftone shading. Fibonacci frames.\n\n'
         'cushion.svg            Growing state (medium moss)          cushion-secured.svg   Secured state (dense, new tips)\n'
         'sporophyte.svg         One secured resource; pin on a map   carpet-edge.svg       Divider, loading line, row of done tasks\n'
         'protonema-network.svg  Matching: creators to sponsors       spore-field.svg       Hero corner texture\n'

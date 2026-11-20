@@ -1,5 +1,5 @@
 Terrarium moss illustrations
-Dots on a base line: moss-500 body, moss-700 shading, moss-300 new growth. Fibonacci frames.
+Curved shoots on a base line: moss-500 body, moss-700 shading, moss-300 new growth, halftone shading. Fibonacci frames.
 
 cushion.svg            Growing state (medium moss)          cushion-secured.svg   Secured state (dense, new tips)
 sporophyte.svg         One secured resource; pin on a map   carpet-edge.svg       Divider, loading line, row of done tasks

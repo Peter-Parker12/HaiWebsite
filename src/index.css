@@ -75,11 +75,26 @@
     @apply rounded bg-cloth-100 px-2 py-0.5 text-xs text-ink/70;
   }
 
+  /* A sporophyte stalk is drawn on a path normalised to length 1. */
+  .animate-draw {
+    stroke-dasharray: 1;
+  }
+
+  /* An FAQ answer eases in when it opens. */
+  details[open] > :not(summary) {
+    animation: fade 377ms cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+
   /* Section entrance on Home: one gentle fade, stagger siblings with --i. */
   .enter {
     animation: enter 987ms cubic-bezier(0.4, 0, 0.2, 1) both;
     animation-delay: calc(var(--i, 0) * 55ms);
   }
+}
+
+@keyframes fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {

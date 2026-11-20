@@ -3,6 +3,7 @@ import { useMemo, useState, type CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
 import { HeroMoss, MossCushion } from '../components/Moss'
 import ProjectCard, { NEED_LABEL, openNeeds } from '../components/ProjectCard'
+import Reveal, { CountUp } from '../components/Reveal'
 import { Loading, Page } from '../components/ui'
 import { useRoot } from '../store/store'
 import type { ProjectStatus, ResType } from '../store/types'
@@ -77,7 +78,7 @@ export default function Home() {
               {!user && !sponsor && <Link to="/sponsor/register" className="btn-ghost">I'm a sponsor</Link>}
             </div>
           </div>
-          <div className="enter justify-self-start lg:justify-self-end" style={stagger(2)}>
+          <div className="justify-self-start lg:justify-self-end">
             <HeroMoss className="block h-auto w-48 lg:w-full lg:max-w-md" />
           </div>
         </div>
@@ -91,16 +92,16 @@ export default function Home() {
             [root.sponsors.length, 'sponsors'],
             [secured, 'resources secured'],
           ].map(([n, l], i) => (
-            <div key={l as string} className="enter" style={stagger(i)}>
-              <div className="data-lg">{n}</div>
+            <Reveal key={l as string} i={i}>
+              <CountUp value={Number(n)} className="data-lg block" />
               <div className="text-sm leading-5 text-ink/70">{l}</div>
-            </div>
+            </Reveal>
           ))}
         </div>
       </section>
 
       <section id="projects" className="mx-auto max-w-7xl px-5 py-12">
-        <h2 className="section-title">Project directory</h2>
+        <Reveal><h2 className="section-title">Project directory</h2></Reveal>
         <div className="mt-6 grid gap-8 lg:grid-cols-[16rem_1fr]">
           <aside className="space-y-5">
             <div className="relative">
@@ -170,9 +171,9 @@ export default function Home() {
             ) : (
               <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                 {results.map((p, i) => (
-                  <div key={p.id} className="enter" style={stagger(Math.min(i, 8))}>
+                  <Reveal key={p.id} i={i % 3} className="h-full">
                     <ProjectCard rec={p} />
-                  </div>
+                  </Reveal>
                 ))}
               </div>
             )}
@@ -182,14 +183,16 @@ export default function Home() {
 
       <section className="border-y border-cloth-200 bg-cloth-100">
         <Page wide>
-          <h2 className="section-title">How it works</h2>
+          <Reveal><h2 className="section-title">How it works</h2></Reveal>
           <div className="mt-6 grid gap-4 md:grid-cols-3">
             {HOW.map(([n, t, d]) => (
-              <div key={n} className="card">
-                <div className="wide-md">{n}</div>
-                <div className="card-title mt-3">{t}</div>
-                <p className="mt-2 text-sm leading-5 text-ink/70">{d}</p>
-              </div>
+              <Reveal key={n} i={Number(n) - 1} className="h-full">
+                <div className="card h-full">
+                  <div className="wide-md">{n}</div>
+                  <div className="card-title mt-3">{t}</div>
+                  <p className="mt-2 text-sm leading-5 text-ink/70">{d}</p>
+                </div>
+              </Reveal>
             ))}
           </div>
         </Page>
@@ -197,8 +200,9 @@ export default function Home() {
 
       <section>
         <Page>
-          <h2 className="section-title">Frequently asked questions</h2>
-          <div className="mt-6 divide-y divide-cloth-200 rounded-lg border border-cloth-200 bg-white">
+          <Reveal><h2 className="section-title">Frequently asked questions</h2></Reveal>
+          <Reveal i={1} className="mt-6">
+          <div className="divide-y divide-cloth-200 rounded-lg border border-cloth-200 bg-white">
             {FAQ.map(([q, a]) => (
               <details key={q} className="group p-4">
                 <summary className="card-title cursor-pointer list-none rounded">{q}</summary>
@@ -206,6 +210,7 @@ export default function Home() {
               </details>
             ))}
           </div>
+          </Reveal>
         </Page>
       </section>
     </>

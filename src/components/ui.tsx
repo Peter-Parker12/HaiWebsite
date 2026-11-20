@@ -120,3 +120,8 @@ export function Page({ children, wide }: { children: ReactNode; wide?: boolean }
 export function Loading() {
   return <div className="py-24 text-center text-sm text-ink/70">Loading…</div>
 }
+
+/** Page change: a short fade and rise (377ms). Re-mounts its content whenever `k` changes. */
+export function RouteFade({ k, children }: { k: string; children: ReactNode }) {
+  return <div key={k} className="animate-route">{children}</div>
+}

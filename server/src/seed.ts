@@ -46,6 +46,8 @@ export async function bootstrapAdmin() {
 
 /** Demo projects, support requests, watchlist and one report. Existing rows are never overwritten, so new samples appear on upgrade. */
 export async function seedDemoProjects() {
+  // Replace the earlier version of project p19 (it used a spam-style title); it is re-created below with clean wording.
+  await pool.query("delete from projects where id = 'p19' and ws->'project'->>'title' ilike '%cheap luxury%'")
   for (const p of rootSeed.projects) {
     await pool.query(
       `insert into projects (id, owner_id, status, listed, one_liner, discipline, location, stage, tags, types, details, updates, ws)
@@ -63,10 +65,5 @@ export async function seedDemoProjects() {
   for (const w of rootSeed.watchlist) {
     await pool.query('insert into watchlist (sponsor_id, project_id) values ($1,$2) on conflict do nothing', [w.sponsorId, w.projectId])
   }
-  await pool.query(
-    `insert into reports (id, project_id, by_kind, by_id, reason, details)
-     values ('rp1', 'p19', 'user', 'u3', 'Spam or scam', 'This looks like an advert for fake watches, not an art project.')
-     on conflict do nothing`,
-  )
   console.log(`demo projects ready (${rootSeed.projects.length})`)
 }

@@ -1,6 +1,6 @@
 import { ArrowLeft } from 'lucide-react'
-import { Link, NavLink, Outlet } from 'react-router-dom'
-import { Chip, Page } from '../components/ui'
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
+import { Chip, Page, RouteFade } from '../components/ui'
 import { ProjectScope, useRoot, useStore } from '../store/store'
 
 const TABS = [
@@ -15,6 +15,7 @@ const TABS = [
 
 function Inner() {
   const { state, projectId, status } = useStore()
+  const { pathname } = useLocation()
   const { root } = useRoot()
   const rec = root.projects.find((p) => p.id === projectId)
 
@@ -51,7 +52,9 @@ function Inner() {
         ))}
       </nav>
       <div className="mt-6">
-        <Outlet />
+        <RouteFade k={pathname}>
+          <Outlet />
+        </RouteFade>
       </div>
     </Page>
   )
